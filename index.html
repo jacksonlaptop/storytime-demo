@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Storytime styles</title>
+<meta name="description" content="Two scenes from Joe's Journey Storytime, each in the cartoon style and a new painted style. Switch between them and pick your favourite.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Storytime: two styles">
+<meta property="og:description" content="Two scenes from Joe's Journey Storytime, in the cartoon style and a new painted style. Which do you prefer?">
+<meta property="og:image" content="https://jacksonlaptop.github.io/storytime-demo/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://jacksonlaptop.github.io/storytime-demo/">
+<meta name="twitter:card" content="summary_large_image">
+<script data-goatcounter="https://joes-journey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<style>
+/* Storytime styles: a demo for phones (Joe, 17 Oct). Two scenes (the village, the ice cliffs), each in two styles (cartoon, painted), one at a time in a 16:9
+   picture with black above and below, the narration in the Storytime box under it. The ice cliffs wait for a tap on the dragon, as in the tale. */
+@font-face{font-family:"Joes Journey Headline";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532594d_Joes%20Journey%20Headline.otf") format("opentype");font-display:swap;}
+:root{--ink:#3a2a12;--paper:#f3e2ba;--pink:#FF00F5;--bg:#04060b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font-family:"Joes Journey Headline",sans-serif;}
+body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-height:100svh;overflow-x:hidden;}
+.top{display:flex;flex-direction:column;gap:10px;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 16px 10px;}
+.title{font-size:15px;opacity:.75;letter-spacing:.02em;}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.seg{display:flex;gap:4px;padding:4px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.seg button{position:relative;overflow:hidden;font:inherit;font-size:15px;color:#fff;background:transparent;border:0;border-radius:999px;padding:9px 15px;cursor:pointer;min-height:40px;}
+.seg button::before{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.5);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:-1;}
+@media (hover:hover){.seg button:hover::before{transform:scaleX(1);}}
+.seg button{z-index:0;}
+.seg button.on{background:rgba(255,255,255,.9);color:#140a24;}
+.seg button:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+.pane{position:relative;width:100%;max-width:min(100vw,calc((100svh - 280px) * 16 / 9));margin:0 auto;aspect-ratio:16/9;overflow:hidden;background:var(--bg);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);mask-composite:intersect;}
+.pane video,.pane canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
+.pane video.on,.pane canvas.on{opacity:1;}
+.pane .black{position:absolute;inset:0;background:var(--bg);opacity:0;transition:opacity .8s ease;pointer-events:none;z-index:5;}
+.pane .black.on{opacity:1;}
+.bub{position:absolute;z-index:6;max-width:46%;padding:6px 9px 7px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(10,14,26,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font-size:clamp(10px,2.6vw,17px);line-height:1.25;opacity:0;translate:0 6px;transition:opacity .35s ease,translate .35s ease;pointer-events:none;}
+.bub.on{opacity:1;translate:0 0;}
+.bub b{display:block;font-weight:normal;font-size:.75em;opacity:.7;margin-bottom:2px;}
+.ring{position:absolute;z-index:7;width:max(48px,13%);aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid rgba(255,230,140,.95);box-shadow:0 0 14px rgba(255,214,90,.8),inset 0 0 12px rgba(255,214,90,.5);
+  background:radial-gradient(closest-side,rgba(255,240,180,.25),rgba(255,240,180,0));opacity:0;pointer-events:none;cursor:pointer;transition:opacity .4s ease;animation:pulse 1.6s ease-in-out infinite;}
+.ring.on{opacity:1;pointer-events:auto;}
+@keyframes pulse{50%{scale:1.12;}}
+/* the dialogue box wears the colours of whoever is talking (Joe, 17 Oct: 'the whole panel should be more obvious'): its frame and glow in the speaker's colour, the paper
+   tinted toward it, a solid nameplate on the top edge beside a big portrait that sits half over the top-left corner */
+.cap{position:relative;width:min(92vw,720px);margin:calc(var(--fs) / 2) auto 0;--fs:clamp(62px,17vw,90px);padding:calc(var(--fs) / 2 + 8px) 20px 18px;border-radius:16px;background:var(--paper);background:color-mix(in srgb,var(--paper) 84%,var(--who,#6b4a1e));color:var(--ink);transition:background .35s ease,box-shadow .35s ease;
+  box-shadow:0 0 0 4px var(--who,#6b4a1e),0 0 0 6px rgba(0,0,0,.55),0 0 30px color-mix(in srgb,var(--who,#6b4a1e) 60%,transparent),0 8px 28px rgba(0,0,0,.6);font-size:clamp(15px,4.2vw,21px);line-height:1.3;}
+.cap .face{position:absolute;left:16px;top:0;translate:0 -50%;width:var(--fs);aspect-ratio:1;z-index:2;border-radius:50%;border:4px solid var(--who,#6b4a1e);background:#e9d6a8 center/cover no-repeat;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:border-color .3s ease;}
+.cap .who{position:absolute;top:0;left:calc(16px + var(--fs) - 4px);translate:0 -50%;padding:4px 14px 5px;border-radius:999px;background:var(--who,#6b4a1e);color:#fff;font-size:.82em;line-height:1.2;box-shadow:0 0 0 2px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.35);transition:background .35s ease;white-space:nowrap;}
+.bub .bface{float:left;width:2.4em;height:2.4em;margin:0 7px 0 0;border-radius:50%;border:2px solid #4f9a5c;background:center/cover no-repeat;}
+.cap .txt{white-space:pre-wrap;}
+.cap .tap{margin-top:10px;color:#7a2f9a;opacity:0;transition:opacity .4s ease;}
+.cap .tap.on{opacity:1;}
+.foot{display:flex;justify-content:center;}
+.replay{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:9px 18px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.replay.on{opacity:1;pointer-events:auto;}
+.foot{flex-direction:column;align-items:center;gap:10px;}
+.vote{display:flex;flex-wrap:wrap;padding:0 16px;text-align:center;align-items:center;justify-content:center;gap:8px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.vote.on{opacity:1;pointer-events:auto;}
+.vote button{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.vote button:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
+.vote .thanks{opacity:.8;}
+.replay:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
+.tapplay{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(4,6,11,.35);border:0;font:inherit;color:#fff;font-size:18px;cursor:pointer;}
+.tapplay span{padding:10px 20px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.tapplay.on{display:flex;}
+/* a phone on its side: the picture fills the height, the switchers sit over its top and the dialogue box over its foot (as in the tale) */
+@media (orientation:landscape) and (max-height:560px){
+  .top{position:absolute;left:0;right:0;top:0;z-index:20;padding:calc(6px + env(safe-area-inset-top)) 12px 0;}
+  .title{display:none;}
+  .seg button{font-size:13px;padding:6px 11px;min-height:34px;}
+  .stage{padding:0;gap:0;}
+  .pane{max-width:min(100vw,calc(100vh * 16 / 9));max-width:min(100vw,calc(100svh * 16 / 9));}
+  .cap{position:absolute;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));translate:-50% 0;width:min(78vw,640px);margin:0;padding:calc(var(--fs) / 2 + 4px) 14px 10px;font-size:14px;z-index:15;}
+  .cap{--fs:48px;}
+  .cap .face{border-width:2px;}
+  .cap .tap{margin-top:4px;}
+  .foot{position:absolute;right:12px;top:calc(50px + env(safe-area-inset-top));z-index:20;}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="title">Storytime: two styles</div>
+  <div class="row">
+    <div class="seg" id="scene"><button data-v="village" class="on">The village</button><button data-v="ice">The ice cliffs</button></div>
+    <div class="seg" id="style"><button data-v="cartoon" class="on">Cartoon</button><button data-v="painted">Painted</button></div>
+  </div>
+</div>
+<div class="stage">
+  <div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button></div>
+  <div class="cap" id="cap"><div class="face" id="face"></div><div class="body"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap">Tap the ice dragon ↑</div></div></div>
+  <div class="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><button data-v="cartoon">Cartoon</button><button data-v="painted">Painted</button></div><button class="replay" id="replay">Play again</button></div>
+</div>
+<script>
+(function () {
+  var B = '', B2 = '';   // the files sit beside the page (GitHub Pages)
+  /* counting (GoatCounter, no cookies, nothing personal): every event is filed under the group of the link it was opened from (?ref=friends, ?ref=linkedin),
+     so the groups can be compared. Events wait for the counter script if it has not arrived yet. */
+  var GRP = (/[?&]ref=([\w-]+)/.exec(location.search) || [])[1] || 'direct', gcQ = [];
+  function track(path) { gcQ.push(GRP + '/' + path); flush(); }
+  function flush() { if (!(window.goatcounter && window.goatcounter.count)) { if (gcQ.length) setTimeout(flush, 800); return; }
+    while (gcQ.length) { var p = gcQ.shift(); try { window.goatcounter.count({ path: p, title: p, event: true }); } catch (e) {} } }
+  var big = Math.max(innerWidth, innerHeight) * (window.devicePixelRatio || 1) > 2200 && innerWidth > 900;   // a phone gets the 1280 files
+  var SC = {
+    village: {
+      cartoon: { play: 'demo-village-cartoon.mp4', end: 12.2 },
+      painted: { play: big ? 'demo-village-painted.mp4' : 'demo-village-painted-s.mp4', end: 12.5 },
+      lines: [ [0, 'nar', '', 'He had a fascination for gold, jewels, treasures and anything that sparkled...but also something more sinister...the local villagers!', 1100],
+               [1.4, 'bub', 'Villager', 'Is that...Trogdor!!!', [.04, .14], 3.4],
+               [5.0, 'nar', '', 'He had many names, Beast, Dragon, Death, but the one that put fear into the hearts of the locals was...Trogdor! Trogdor The Burninator...'] ] },
+    ice: {
+      cartoon: { base: 'story2-whole-3_4', done: 11.0, ring: [.78, .42] },
+      painted: { base: 'story2-whole-3_4-ns', done: 10.0, ring: [.80, .46], snow: true },
+      lines: [ [.6, 'nar', '', 'First, the ice cliffs. Joe kept his distance...and one hand on his sword.'],
+               [5.2, 'say', 'Clive', 'Ice dragons. Moody, but artists at heart. Go on, say hello.'] ],
+      after: ['say', 'Joe', 'Is that...me? I mean I think I’ve got better hair than that but...'] }
+  };
+  var pane = document.getElementById('pane'), black = document.getElementById('black'), bub = document.getElementById('bub'), ring = document.getElementById('ring'),
+      who = document.getElementById('who'), txt = document.getElementById('txt'), tap = document.getElementById('tap'), replay = document.getElementById('replay');
+  var cur = { scene: 'village', style: 'cartoon' }, run = 0, timers = [], vids = [], snow = null;
+  function later(fn, ms) { var r = run; timers.push(setTimeout(function () { if (r === run) fn(); }, ms)); }
+  function vid(src, loop) { var v = document.createElement('video'); v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = !!loop; v.preload = 'auto';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.src = B + src; var tries = /-s\.mp4$|cartoon/.test(src) ? [] : [src.replace(/\.mp4$/, '-s.mp4')];
+    v.addEventListener('error', function () { var n = tries.shift(); if (!n) return; v.src = n; if (v.classList.contains('on')) go(v); });
+    pane.insertBefore(v, black); vids.push(v); return v; }   // (a file the CDN refuses comes from GitHub instead; then the phone-size copy)
+  var tapplay = document.getElementById('tapplay');   // (an iPhone in Low Power Mode will not start a video by itself: one tap starts it)
+  tapplay.addEventListener('click', function () { tapplay.classList.remove('on'); vids.forEach(function (v) { if (v.classList.contains('on') && !v.ended) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } }); });
+  function go(v) { var p = v.play(); if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError' && v.classList.contains('on')) tapplay.classList.add('on'); }); }
+  function show(v, others) { v.classList.add('on'); setTimeout(function () { (others || []).forEach(function (o) { o.classList.remove('on'); try { o.pause(); } catch (e) {} }); }, 420); }
+  var typeT = 0;
+  /* who is talking (Joe, 17 Oct: 'a different colour for who's talking, or their profile in the bottom left'): a round portrait cut from the scene itself, in its
+     style, ringed and named in that speaker's colour. The narrator has an open book. */
+  var BOOK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#e9d6a8"/><path d="M10 20c8-3 15-2 22 3v25c-7-5-14-6-22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/><path d="M54 20c-8-3-15-2-22 3v25c7-5 14-6 22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 27c4-1 8-1 12 1M15 33c4-1 8-1 12 1M37 28c4-2 8-2 12-1M37 34c4-2 8-2 12-1" stroke="#6b4a1e" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".6"/></svg>');
+  var WHO = { Narrator: '#6b4a1e', Clive: '#6a2c91', Joe: '#1f4fa0', Villager: '#2f7a3b' };
+  function faceOf(name) { return name === 'Narrator' ? BOOK : (B || '') + 'demo-face-' + name.toLowerCase() + '-' + cur.style + '.webp'; }
+  var face = document.getElementById('face');
+  function speaker(name) { name = name || 'Narrator'; face.style.backgroundImage = 'url("' + faceOf(name) + '")'; cap.style.setProperty('--who', WHO[name] || WHO.Narrator); }
+  function type(name, text, ms) { clearInterval(typeT); speaker(name); who.textContent = name || 'Narrator';   // (Joe: narration has a name too, so the label line is never empty)
+    txt.textContent = ''; var i = 0, step = Math.max(14, (ms || text.length * 38) / text.length);
+    typeT = setInterval(function () { i++; txt.textContent = text.slice(0, i); if (i >= text.length) clearInterval(typeT); }, step); }
+  function bubble(name, text, at, secs) { bub.querySelector('b').textContent = name; bub.querySelector('.bface').style.backgroundImage = 'url("' + faceOf(name) + '")'; bub.querySelector('span').textContent = text; bub.style.left = (at[0] * 100) + '%'; bub.style.top = (at[1] * 100) + '%';
+    bub.classList.add('on'); later(function () { bub.classList.remove('on'); }, secs * 1000); }
+  function lines(L) { L.forEach(function (l) { later(function () { if (l[1] === 'bub') bubble(l[2], l[3], l[4], l[5]); else type(l[2], l[3], l[4]); }, l[0] * 1000); }); }
+  function stop() { run++; timers.forEach(clearTimeout); timers = []; clearInterval(typeT); vids.forEach(function (v) { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} v.remove(); }); vids = [];
+    if (snow) { snow.stop(); snow = null; } bub.classList.remove('on'); tapplay.classList.remove('on'); speaker('Narrator'); ring.classList.remove('on'); tap.classList.remove('on'); replay.classList.remove('on'); vote.classList.remove('on'); who.textContent = ''; txt.textContent = ''; }
+  function start() { stop(); var S = SC[cur.scene], T = S[cur.style]; track('play/' + cur.scene + '-' + cur.style); var at = cur.scene + '-' + cur.style; black.classList.add('on'); setTimeout(function () { black.classList.remove('on'); }, 60);
+    if (cur.scene === 'village') {
+      var v = vid(T.play, false); show(v); go(v); lines(S.lines);
+      later(function () { black.classList.add('on'); try { v.pause(); } catch (e) {} replay.classList.add('on'); askVote(); track('finished/' + at); }, T.end * 1000);
+    } else {
+      var s = big ? '' : '-s', a = vid(T.base + '-a' + s + '.mp4', true), b = vid(T.base + '-b' + s + '.mp4', false), c = vid(T.base + '-c' + s + '.mp4', true);
+      a.poster = (B2 || '') + T.base + s + '-poster.webp'; show(a); go(a); if (T.snow) { snow = makeSnow(); snow.on(true); } lines(S.lines);
+      ring.style.left = (T.ring[0] * 100) + '%'; ring.style.top = (T.ring[1] * 100) + '%';
+      later(function () { ring.classList.add('on'); tap.classList.add('on'); }, 8600);   // (the prompt comes in under Clive's line; it never replaces it)
+      ring.onclick = function () { if (!ring.classList.contains('on')) return; ring.classList.remove('on'); tap.classList.remove('on'); track('tap-dragon/' + cur.style); b.currentTime = 0; go(b); show(b, [a]); if (snow) snow.on(false);
+        b.onended = function () { c.currentTime = 0; go(c); show(c, [b]); if (snow) snow.on(true); };
+        later(function () { type(S.after[1], S.after[2]); }, T.done * 1000);
+        later(function () { replay.classList.add('on'); askVote(); track('finished/' + at); }, T.done * 1000 + 3500); };
+    } }
+  /* the snow over the painted ice while it is held still: soft pale flakes drifting down (the same as Storytime 2's) */
+  function makeSnow() { var cv = document.createElement('canvas'); pane.insertBefore(cv, black); cv.style.zIndex = 2; var x = cv.getContext('2d'), F = [], raf = 0, t0 = 0, live = true;
+    for (var i = 0; i < 90; i++) { var near = Math.random() < .18; F.push({ x: Math.random(), y: Math.random(), r: near ? .0026 + Math.random() * .0018 : .0009 + Math.random() * .0012, v: near ? .085 + Math.random() * .04 : .04 + Math.random() * .035, ph: Math.random() * 6.28, sw: .004 + Math.random() * .008, a: near ? .75 : .45 + Math.random() * .4 }); }
+    function step(now) { if (!live) return; raf = requestAnimationFrame(step); var dt = t0 ? Math.min(.05, (now - t0) / 1000) : 0; t0 = now; var W = cv.clientWidth, H = cv.clientHeight, d = Math.min(2, window.devicePixelRatio || 1);
+      if (!W) return; if (cv.width !== Math.round(W * d)) { cv.width = Math.round(W * d); cv.height = Math.round(H * d); } x.setTransform(d, 0, 0, d, 0, 0); x.clearRect(0, 0, W, H);
+      F.forEach(function (f) { f.y += f.v * dt; f.ph += dt * 1.3; if (f.y > 1.03) { f.y = -.03; f.x = Math.random(); } var px = (f.x + Math.sin(f.ph) * f.sw) * W, py = f.y * H, r = Math.max(.6, f.r * W);
+        var g = x.createRadialGradient(px, py, 0, px, py, r * 2.2); g.addColorStop(0, 'rgba(244,248,255,' + f.a + ')'); g.addColorStop(.45, 'rgba(226,236,255,' + (f.a * .55).toFixed(2) + ')'); g.addColorStop(1, 'rgba(210,225,255,0)');
+        x.fillStyle = g; x.beginPath(); x.arc(px, py, r * 2.2, 0, 6.2832); x.fill(); }); }
+    raf = requestAnimationFrame(step);
+    return { on: function (y) { cv.classList.toggle('on', !!y); }, stop: function () { live = false; cancelAnimationFrame(raf); cv.remove(); } }; }
+  function seg(id, key) { var el = document.getElementById(id); el.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return;
+    [].forEach.call(el.children, function (c) { c.classList.toggle('on', c === b); }); cur[key] = b.dataset.v; start(); }); }
+  /* the dialogue box keeps ONE size (Joe, 17 Oct: 'keep the caption the same size, don't bother resizing'): as tall as the longest line it will ever hold at
+     this width, measured with every line in turn; measured again when the window changes size or the font arrives */
+  var cap = document.getElementById('cap'), ALL = [];
+  Object.keys(SC).forEach(function (k) { SC[k].lines.forEach(function (l) { if (l[1] !== 'bub') ALL.push([l[2], l[3]]); }); if (SC[k].after) ALL.push([SC[k].after[1], SC[k].after[2]]); });
+  function fitCap() { var W = who.textContent, T = txt.textContent, max = 0; cap.style.height = 'auto';
+    ALL.forEach(function (l) { who.textContent = l[0]; txt.textContent = l[1]; max = Math.max(max, cap.offsetHeight); });
+    who.textContent = W; txt.textContent = T; cap.style.height = max + 'px'; }
+  fitCap(); addEventListener('resize', fitCap); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCap);
+  /* the vote, once per scene (remembered on this device where the browser allows it) */
+  var vote = document.getElementById('vote'), VQ = vote.innerHTML;
+  function voted(k, v) { try { if (v) localStorage.setItem('jj-vote-' + k, v); return localStorage.getItem('jj-vote-' + k); } catch (e) { return null; } }
+  function askVote() { var k = cur.scene, had = voted(k);
+    vote.innerHTML = had ? '<span class="thanks">You picked ' + (had === 'painted' ? 'painted' : 'cartoon') + ' for this scene. Thank you!</span>' : VQ; vote.classList.add('on'); }
+  vote.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = cur.scene; voted(k, b.dataset.v); track('vote/' + k + '/' + b.dataset.v);
+    vote.innerHTML = '<span class="thanks">Thank you! Try the other scene too.</span>'; });
+  seg('scene', 'scene'); seg('style', 'style'); replay.addEventListener('click', start);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) vids.forEach(function (v) { try { v.pause(); } catch (e) {} }); else vids.forEach(function (v) { if (v.classList.contains('on') && !v.ended) go(v); }); });
+  start();
+})();
+</script>
+</body>
+</html>
