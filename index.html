@@ -58,6 +58,9 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
 .cap .txt{white-space:pre-wrap;}
 .cap .tap{margin-top:10px;color:#7a2f9a;opacity:0;transition:opacity .4s ease;}
 .cap .tap.on{opacity:1;}
+.cap .capsnow{position:absolute;left:-1%;width:102%;top:-7px;height:auto;pointer-events:none;opacity:0;transition:opacity 2.5s ease;z-index:1;}
+.cap.snowy .capsnow{opacity:1;}
+.cap .face,.cap .who{z-index:3;}
 .foot{display:flex;justify-content:center;}
 .replay{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:9px 18px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .4s ease;}
 .replay.on{opacity:1;pointer-events:auto;}
@@ -96,7 +99,7 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
 </div>
 <div class="stage">
   <div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button></div>
-  <div class="cap" id="cap"><div class="face" id="face"></div><div class="body"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap">Tap the ice dragon ↑</div></div></div>
+  <div class="cap" id="cap"><img class="capsnow" src="story-banner-snow.webp" alt=""><div class="face" id="face"></div><div class="body"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap">Tap the ice dragon ↑</div></div></div>
   <div class="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><button data-v="cartoon">Cartoon</button><button data-v="painted">Painted</button></div><button class="replay" id="replay">Play again</button></div>
 </div>
 <script>
@@ -117,7 +120,7 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
                [1.4, 'bub', 'Villager', 'Is that...Trogdor!!!', [.04, .14], 3.4],
                [5.0, 'nar', '', 'He had many names, Beast, Dragon, Death, but the one that put fear into the hearts of the locals was...Trogdor! Trogdor The Burninator...'] ] },
     ice: {
-      cartoon: { base: 'story2-whole-3_4', done: 11.0, ring: [.78, .42] },
+      cartoon: { base: 'story2-whole-3_4', done: 11.0, ring: [.78, .42], snow: 'always' },   // (Joe: both ice scenes get the snow; the cartoon takes have none of their own, so it falls through the action too)
       painted: { base: 'story2-whole-3_4-ns', done: 10.0, ring: [.80, .46], snow: true },
       lines: [ [.6, 'nar', '', 'First, the ice cliffs. Joe kept his distance...and one hand on his sword.'],
                [5.2, 'say', 'Clive', 'Ice dragons. Moody, but artists at heart. Go on, say hello.'] ],
@@ -151,7 +154,7 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
   function lines(L) { L.forEach(function (l) { later(function () { if (l[1] === 'bub') bubble(l[2], l[3], l[4], l[5]); else type(l[2], l[3], l[4]); }, l[0] * 1000); }); }
   function stop() { run++; timers.forEach(clearTimeout); timers = []; clearInterval(typeT); vids.forEach(function (v) { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} v.remove(); }); vids = [];
     if (snow) { snow.stop(); snow = null; } bub.classList.remove('on'); tapplay.classList.remove('on'); speaker('Narrator'); ring.classList.remove('on'); tap.classList.remove('on'); replay.classList.remove('on'); vote.classList.remove('on'); who.textContent = ''; txt.textContent = ''; }
-  function start() { stop(); var S = SC[cur.scene], T = S[cur.style]; track('play/' + cur.scene + '-' + cur.style); var at = cur.scene + '-' + cur.style; black.classList.add('on'); setTimeout(function () { black.classList.remove('on'); }, 60);
+  function start() { stop(); var S = SC[cur.scene], T = S[cur.style]; cap.classList.toggle('snowy', cur.scene === 'ice'); track('play/' + cur.scene + '-' + cur.style); var at = cur.scene + '-' + cur.style; black.classList.add('on'); setTimeout(function () { black.classList.remove('on'); }, 60);
     if (cur.scene === 'village') {
       var v = vid(T.play, false); show(v); go(v); lines(S.lines);
       later(function () { black.classList.add('on'); try { v.pause(); } catch (e) {} replay.classList.add('on'); askVote(); track('finished/' + at); }, T.end * 1000);
@@ -160,7 +163,7 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
       a.poster = (B2 || '') + T.base + s + '-poster.webp'; show(a); go(a); if (T.snow) { snow = makeSnow(); snow.on(true); } lines(S.lines);
       ring.style.left = (T.ring[0] * 100) + '%'; ring.style.top = (T.ring[1] * 100) + '%';
       later(function () { ring.classList.add('on'); tap.classList.add('on'); }, 8600);   // (the prompt comes in under Clive's line; it never replaces it)
-      ring.onclick = function () { if (!ring.classList.contains('on')) return; ring.classList.remove('on'); tap.classList.remove('on'); track('tap-dragon/' + cur.style); b.currentTime = 0; go(b); show(b, [a]); if (snow) snow.on(false);
+      ring.onclick = function () { if (!ring.classList.contains('on')) return; ring.classList.remove('on'); tap.classList.remove('on'); track('tap-dragon/' + cur.style); b.currentTime = 0; go(b); show(b, [a]); if (snow && T.snow !== 'always') snow.on(false);
         b.onended = function () { c.currentTime = 0; go(c); show(c, [b]); if (snow) snow.on(true); };
         later(function () { type(S.after[1], S.after[2]); }, T.done * 1000);
         later(function () { replay.classList.add('on'); askVote(); track('finished/' + at); }, T.done * 1000 + 3500); };
