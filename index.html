@@ -77,8 +77,17 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
 .vote button{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
 .vote button:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
 .vote .thanks{opacity:.8;}
-.vote button.picked{background:rgba(255,255,255,.92);color:#140a24;border-color:#fff;}
 .vote .q{flex-basis:100%;text-align:center;}
+/* each choice is a picture of THIS scene in that style, named on it (Joe: 'the buttons don't give much context') */
+.vote{flex-direction:column;flex-wrap:nowrap;gap:8px;}
+.vote .opts{display:flex;gap:10px;justify-content:center;width:100%;}
+.vote .opts button{position:relative;flex:0 1 min(38%,230px);padding:0;min-height:0;border:2px solid rgba(255,255,255,.5);border-radius:12px;overflow:hidden;background:#000;-webkit-backdrop-filter:none;backdrop-filter:none;transition:border-color .25s ease,transform .25s ease;}
+.vote .opts button img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;}
+.vote .opts button em{position:absolute;left:50%;bottom:6px;translate:-50% 0;font-style:normal;font-size:13px;white-space:nowrap;padding:3px 10px 4px;border-radius:999px;background:rgba(10,12,20,.82);color:#fff;}
+@media (hover:hover){.vote .opts button:hover{border-color:#fff;transform:translateY(-2px);}}
+.vote .opts button.picked{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.35);}
+.vote .opts button.picked em{background:#fff;color:#140a24;}
+.vote .tip{font-size:13px;opacity:.75;text-align:center;min-height:1em;white-space:nowrap;}
 .replay:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
 .tapplay{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(4,6,11,.35);border:0;font:inherit;color:#fff;font-size:18px;cursor:pointer;}
 .tapplay span{padding:10px 20px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
@@ -107,7 +116,7 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
   </div>
 </div>
 <div class="stage">
-  <div class="pw"><div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button><div class="foot" id="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><button data-v="cartoon">Cartoon</button><button data-v="painted">Painted</button></div><button class="replay" id="replay">Play again</button></div></div></div>
+  <div class="pw"><div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button><div class="foot" id="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><div class="opts"><button data-v="cartoon"><img alt="This scene in the cartoon style"><em>Cartoon</em></button><button data-v="painted"><img alt="This scene in the painted style"><em>Painted</em></button></div><span class="tip"></span></div><button class="replay" id="replay">Play again</button></div></div></div>
   <div class="cap" id="cap"><img class="capsnow" src="story-banner-snow.webp" alt=""><div class="face" id="face"></div><div class="body"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap">Tap the ice dragon ↑</div></div></div>
 </div>
 <script>
@@ -202,10 +211,12 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
      vote/<scene>/<new> plus unvote/<scene>/<old>, so in GoatCounter: votes for a style = its vote count minus its unvote count. */
   var MEM = {};
   function voted(k, v) { if (v) MEM[k] = v; try { if (v) localStorage.setItem('jj-vote-' + k, v); return localStorage.getItem('jj-vote-' + k) || MEM[k] || null; } catch (e) { return MEM[k] || null; } }
+  var SEEN = {};
   function drawVote(msg) { var had = voted(cur.scene); vote.innerHTML = VQ;
-    [].forEach.call(vote.querySelectorAll('button'), function (b) { b.classList.toggle('picked', b.dataset.v === had); });
+    [].forEach.call(vote.querySelectorAll('button'), function (b) { var v = b.dataset.v; b.classList.toggle('picked', v === had); b.querySelector('img').src = B + 'demo-thumb-' + cur.scene + '-' + v + '.webp'; b.querySelector('em').textContent = (v === 'painted' ? 'Painted' : 'Cartoon') + (v === had ? ': your pick' : ''); });
+    var other = cur.style === 'painted' ? 'cartoon' : 'painted'; vote.querySelector('.tip').textContent = SEEN[cur.scene + '-' + other] ? '' : 'Not seen ' + (other === 'painted' ? 'Painted' : 'Cartoon') + ' yet? Switch at the top.';
     var q = vote.querySelector('.q'); if (had) q.textContent = msg || ('Your pick: ' + had + '. Tap the other to change it.'); }
-  function askVote() { foot.classList.add('on'); drawVote(); vote.classList.add('on'); }
+  function askVote() { SEEN[cur.scene + '-' + cur.style] = 1; foot.classList.add('on'); drawVote(); vote.classList.add('on'); }
   vote.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = cur.scene, was = voted(k), now = b.dataset.v; if (was === now) return;
     voted(k, now); track('vote/' + k + '/' + now); if (was) track('unvote/' + k + '/' + was);
     drawVote(was ? 'Changed to ' + now + '. Thank you!' : 'Thank you! Try the other scene too.'); });
