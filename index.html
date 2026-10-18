@@ -42,9 +42,11 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
 .pane video.on,.pane canvas.on{opacity:1;}
 .pane .black{position:absolute;inset:0;background:var(--bg);opacity:0;transition:opacity .8s ease;pointer-events:none;z-index:5;}
 .pane .black.on{opacity:1;}
-.bub{position:absolute;z-index:6;max-width:62%;display:grid;grid-template-columns:auto minmax(0,max-content);column-gap:9px;align-items:center;padding:7px 14px 7px 7px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(10,14,26,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+.bub{position:absolute;z-index:6;max-width:62%;display:grid;grid-template-columns:auto minmax(0,max-content);column-gap:9px;align-items:center;padding:7px 14px 7px 7px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgb(14,18,30);background:rgba(14,18,30,.9);transform:translateY(calc(-100% - 11px));
   font-size:clamp(10px,2.6vw,17px);line-height:1.25;opacity:0;translate:0 6px;transition:opacity .35s ease,translate .35s ease;pointer-events:none;}
 .bub.on{opacity:1;translate:0 0;}
+/* its tail: points down at the speaker's head (Joe: the bubble felt disconnected from the person saying it); one colour with the bubble, no blur behind either */
+.bub::after{content:"";position:absolute;left:16px;bottom:-7px;width:12px;height:12px;background:rgba(14,18,30,.9);border-right:1px solid rgba(255,255,255,.5);border-bottom:1px solid rgba(255,255,255,.5);transform:rotate(45deg);border-bottom-right-radius:3px;}
 .bub b{grid-column:2;align-self:end;font-weight:normal;font-size:.75em;opacity:.7;line-height:1.1;}
 .bub span{grid-column:2;align-self:start;}   /* the portrait on the left across both rows; the name over the line beside it */
 .ring{position:absolute;z-index:7;width:max(48px,13%);aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid rgba(255,230,140,.95);box-shadow:0 0 14px rgba(255,214,90,.8),inset 0 0 12px rgba(255,214,90,.5);
@@ -121,7 +123,7 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
       cartoon: { play: 'demo-village-cartoon.mp4', end: 12.2 },
       painted: { play: big ? 'demo-village-painted.mp4' : 'demo-village-painted-s.mp4', end: 12.5 },
       lines: [ [0, 'nar', '', 'He had a fascination for gold, jewels, treasures and anything that sparkled...but also something more sinister...the local villagers!', 1100],
-               [1.4, 'bub', 'Villager', 'Is that...Trogdor!!!', [.04, .14], 3.4],
+               [1.4, 'bub', 'Villager', 'Is that...Trogdor!!!', { cartoon: [.153, .535], painted: [.155, .495] }, 3.4],   // (the point the tail touches: the top of the villager's head, in each style)
                [5.0, 'nar', '', 'He had many names, Beast, Dragon, Death, but the one that put fear into the hearts of the locals was...Trogdor! Trogdor The Burninator...'] ] },
     ice: {
       cartoon: { base: 'story2-whole-3_4', done: 11.0, ring: [.78, .42], snow: 'always' },   // (Joe: both ice scenes get the snow; the cartoon takes have none of their own, so it falls through the action too)
@@ -153,7 +155,7 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
   function type(name, text, ms) { clearInterval(typeT); speaker(name); who.textContent = name || 'Narrator';   // (Joe: narration has a name too, so the label line is never empty)
     txt.textContent = ''; var i = 0, step = Math.max(14, (ms || text.length * 38) / text.length);
     typeT = setInterval(function () { i++; txt.textContent = text.slice(0, i); if (i >= text.length) clearInterval(typeT); }, step); }
-  function bubble(name, text, at, secs) { bub.querySelector('b').textContent = name; bub.querySelector('.bface').style.backgroundImage = 'url("' + faceOf(name) + '")'; bub.querySelector('span').textContent = text; bub.style.left = (at[0] * 100) + '%'; bub.style.top = (at[1] * 100) + '%';
+  function bubble(name, text, at, secs) { bub.querySelector('b').textContent = name; bub.querySelector('.bface').style.backgroundImage = 'url("' + faceOf(name) + '")'; bub.querySelector('span').textContent = text; var pt = at[cur.style] || at; bub.style.left = 'calc(' + (pt[0] * 100) + '% - 22px)'; bub.style.top = (pt[1] * 100) + '%';
     bub.classList.add('on'); later(function () { bub.classList.remove('on'); }, secs * 1000); }
   function lines(L) { L.forEach(function (l) { later(function () { if (l[1] === 'bub') bubble(l[2], l[3], l[4], l[5]); else type(l[2], l[3], l[4]); }, l[0] * 1000); }); }
   function stop() { run++; timers.forEach(clearTimeout); timers = []; clearInterval(typeT); vids.forEach(function (v) { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} v.remove(); }); vids = [];
