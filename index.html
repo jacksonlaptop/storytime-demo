@@ -21,7 +21,7 @@
 :root{--ink:#3a2a12;--paper:#f3e2ba;--pink:#FF00F5;--bg:#04060b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;height:100%;background:var(--bg);color:#fff;font-family:"Joes Journey Headline",sans-serif;}
-body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-height:100svh;overflow-x:hidden;}
+body{position:relative;display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidden;}   /* (Joe: always exactly one screen tall: nothing scrolls, the picture shrinks to the space left) */
 .top{display:flex;flex-direction:column;gap:10px;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 16px 10px;}
 .title{font-size:15px;opacity:.75;letter-spacing:.02em;}
 .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
@@ -29,11 +29,13 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
 .seg button{position:relative;overflow:hidden;font:inherit;font-size:15px;color:#fff;background:transparent;border:0;border-radius:999px;padding:9px 15px;cursor:pointer;min-height:40px;}
 .seg button::before{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.5);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:-1;}
 @media (hover:hover){.seg button:hover::before{transform:scaleX(1);}}
+@media (max-width:400px){.seg button{font-size:14px;padding:8px 11px;}.top{gap:8px;padding-top:calc(10px + env(safe-area-inset-top));}}
 .seg button{z-index:0;}
 .seg button.on{background:rgba(255,255,255,.9);color:#140a24;}
 .seg button:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
-.stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
-.pane{position:relative;width:100%;max-width:min(100vw,calc((100svh - 280px) * 16 / 9));margin:0 auto;aspect-ratio:16/9;overflow:hidden;background:var(--bg);
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+.pw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size;}   /* the picture's room: whatever height the switchers, the box and the buttons leave */
+.pane{position:relative;flex:none;width:min(100cqw,calc(100cqh * 16 / 9));margin:0 auto;aspect-ratio:16/9;overflow:hidden;background:var(--bg);
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);mask-composite:intersect;}
 .pane video,.pane canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
@@ -61,10 +63,12 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
 .cap .capsnow{position:absolute;left:-1%;width:102%;top:-7px;height:auto;pointer-events:none;opacity:0;transition:opacity 2.5s ease;z-index:1;}
 .cap.snowy .capsnow{opacity:1;}
 .cap .face,.cap .who{z-index:3;}
-.foot{display:flex;justify-content:center;}
+
 .replay{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:9px 18px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .4s ease;}
 .replay.on{opacity:1;pointer-events:auto;}
-.foot{flex-direction:column;align-items:center;gap:10px;}
+/* the end of a scene: the vote and Play again sit ON the picture, over a dark veil (so the picture keeps all the room below it) */
+.foot{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;background:rgba(4,6,11,0);transition:background .5s ease;}
+.foot.on{background:rgba(4,6,11,.6);pointer-events:auto;}
 .vote{display:flex;flex-wrap:wrap;padding:0 16px;text-align:center;align-items:center;justify-content:center;gap:8px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .4s ease;}
 .vote.on{opacity:1;pointer-events:auto;}
 .vote button{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
@@ -80,12 +84,12 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
   .title{display:none;}
   .seg button{font-size:13px;padding:6px 11px;min-height:34px;}
   .stage{padding:0;gap:0;}
-  .pane{max-width:min(100vw,calc(100vh * 16 / 9));max-width:min(100vw,calc(100svh * 16 / 9));}
+  .pw{height:100%;}
   .cap{position:absolute;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));translate:-50% 0;width:min(78vw,640px);margin:0;padding:calc(var(--fs) / 2 + 4px) 14px 10px;font-size:14px;z-index:15;}
   .cap{--fs:48px;}
   .cap .face{border-width:2px;}
   .cap .tap{margin-top:4px;}
-  .foot{position:absolute;right:12px;top:calc(50px + env(safe-area-inset-top));z-index:20;}
+  .foot{padding-bottom:90px;}
 }
 </style>
 </head>
@@ -98,9 +102,8 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
   </div>
 </div>
 <div class="stage">
-  <div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button></div>
+  <div class="pw"><div class="pane" id="pane"><div class="black" id="black"></div><div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div><div class="ring" id="ring" role="button" aria-label="Tap the ice dragon"></div><button class="tapplay" id="tapplay"><span>Tap to play</span></button><div class="foot" id="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><button data-v="cartoon">Cartoon</button><button data-v="painted">Painted</button></div><button class="replay" id="replay">Play again</button></div></div></div>
   <div class="cap" id="cap"><img class="capsnow" src="story-banner-snow.webp" alt=""><div class="face" id="face"></div><div class="body"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap">Tap the ice dragon ↑</div></div></div>
-  <div class="foot"><div class="vote" id="vote"><span class="q">Which style do you prefer?</span><button data-v="cartoon">Cartoon</button><button data-v="painted">Painted</button></div><button class="replay" id="replay">Play again</button></div>
 </div>
 <script>
 (function () {
@@ -153,7 +156,7 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
     bub.classList.add('on'); later(function () { bub.classList.remove('on'); }, secs * 1000); }
   function lines(L) { L.forEach(function (l) { later(function () { if (l[1] === 'bub') bubble(l[2], l[3], l[4], l[5]); else type(l[2], l[3], l[4]); }, l[0] * 1000); }); }
   function stop() { run++; timers.forEach(clearTimeout); timers = []; clearInterval(typeT); vids.forEach(function (v) { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} v.remove(); }); vids = [];
-    if (snow) { snow.stop(); snow = null; } bub.classList.remove('on'); tapplay.classList.remove('on'); speaker('Narrator'); ring.classList.remove('on'); tap.classList.remove('on'); replay.classList.remove('on'); vote.classList.remove('on'); who.textContent = ''; txt.textContent = ''; }
+    if (snow) { snow.stop(); snow = null; } bub.classList.remove('on'); tapplay.classList.remove('on'); speaker('Narrator'); ring.classList.remove('on'); tap.classList.remove('on'); replay.classList.remove('on'); vote.classList.remove('on'); foot.classList.remove('on'); who.textContent = ''; txt.textContent = ''; }
   function start() { stop(); var S = SC[cur.scene], T = S[cur.style]; cap.classList.toggle('snowy', cur.scene === 'ice'); track('play/' + cur.scene + '-' + cur.style); var at = cur.scene + '-' + cur.style; black.classList.add('on'); setTimeout(function () { black.classList.remove('on'); }, 60);
     if (cur.scene === 'village') {
       var v = vid(T.play, false); show(v); go(v); lines(S.lines);
@@ -189,9 +192,9 @@ body{position:relative;display:flex;flex-direction:column;min-height:100vh;min-h
     who.textContent = W; txt.textContent = T; cap.style.height = max + 'px'; }
   fitCap(); addEventListener('resize', fitCap); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCap);
   /* the vote, once per scene (remembered on this device where the browser allows it) */
-  var vote = document.getElementById('vote'), VQ = vote.innerHTML;
+  var vote = document.getElementById('vote'), VQ = vote.innerHTML, foot = document.getElementById('foot');
   function voted(k, v) { try { if (v) localStorage.setItem('jj-vote-' + k, v); return localStorage.getItem('jj-vote-' + k); } catch (e) { return null; } }
-  function askVote() { var k = cur.scene, had = voted(k);
+  function askVote() { var k = cur.scene, had = voted(k); foot.classList.add('on');
     vote.innerHTML = had ? '<span class="thanks">You picked ' + (had === 'painted' ? 'painted' : 'cartoon') + ' for this scene. Thank you!</span>' : VQ; vote.classList.add('on'); }
   vote.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = cur.scene; voted(k, b.dataset.v); track('vote/' + k + '/' + b.dataset.v);
     vote.innerHTML = '<span class="thanks">Thank you! Try the other scene too.</span>'; });
