@@ -77,6 +77,8 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
 .vote button{font:inherit;font-size:15px;color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
 .vote button:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
 .vote .thanks{opacity:.8;}
+.vote button.picked{background:rgba(255,255,255,.92);color:#140a24;border-color:#fff;}
+.vote .q{flex-basis:100%;text-align:center;}
 .replay:active{filter:brightness(.9) drop-shadow(2px 2px 0 var(--pink));transform:translateY(2px);}
 .tapplay{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(4,6,11,.35);border:0;font:inherit;color:#fff;font-size:18px;cursor:pointer;}
 .tapplay span{padding:10px 20px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
@@ -196,11 +198,17 @@ body{position:relative;display:flex;flex-direction:column;height:100vh;height:10
   fitCap(); addEventListener('resize', fitCap); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCap);
   /* the vote, once per scene (remembered on this device where the browser allows it) */
   var vote = document.getElementById('vote'), VQ = vote.innerHTML, foot = document.getElementById('foot');
-  function voted(k, v) { try { if (v) localStorage.setItem('jj-vote-' + k, v); return localStorage.getItem('jj-vote-' + k); } catch (e) { return null; } }
-  function askVote() { var k = cur.scene, had = voted(k); foot.classList.add('on');
-    vote.innerHTML = had ? '<span class="thanks">You picked ' + (had === 'painted' ? 'painted' : 'cartoon') + ' for this scene. Thank you!</span>' : VQ; vote.classList.add('on'); }
-  vote.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = cur.scene; voted(k, b.dataset.v); track('vote/' + k + '/' + b.dataset.v);
-    vote.innerHTML = '<span class="thanks">Thank you! Try the other scene too.</span>'; });
+  /* the vote: the buttons stay, the pick is lit, and a different pick replaces it (Joe: 'let the user change their choice'). A change is counted as
+     vote/<scene>/<new> plus unvote/<scene>/<old>, so in GoatCounter: votes for a style = its vote count minus its unvote count. */
+  var MEM = {};
+  function voted(k, v) { if (v) MEM[k] = v; try { if (v) localStorage.setItem('jj-vote-' + k, v); return localStorage.getItem('jj-vote-' + k) || MEM[k] || null; } catch (e) { return MEM[k] || null; } }
+  function drawVote(msg) { var had = voted(cur.scene); vote.innerHTML = VQ;
+    [].forEach.call(vote.querySelectorAll('button'), function (b) { b.classList.toggle('picked', b.dataset.v === had); });
+    var q = vote.querySelector('.q'); if (had) q.textContent = msg || ('Your pick: ' + had + '. Tap the other to change it.'); }
+  function askVote() { foot.classList.add('on'); drawVote(); vote.classList.add('on'); }
+  vote.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = cur.scene, was = voted(k), now = b.dataset.v; if (was === now) return;
+    voted(k, now); track('vote/' + k + '/' + now); if (was) track('unvote/' + k + '/' + was);
+    drawVote(was ? 'Changed to ' + now + '. Thank you!' : 'Thank you! Try the other scene too.'); });
   seg('scene', 'scene'); seg('style', 'style'); replay.addEventListener('click', start);
   document.addEventListener('visibilitychange', function () { if (document.hidden) vids.forEach(function (v) { try { v.pause(); } catch (e) {} }); else vids.forEach(function (v) { if (v.classList.contains('on') && !v.ended) go(v); }); });
   start();
