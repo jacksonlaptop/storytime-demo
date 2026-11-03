@@ -73,7 +73,7 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!(/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || q.get('scenes') === '1')) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/36609cde8b790f0cf1065d4af13f641eacaccda2/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/d3c993d8756871914c3ff79871f103b6018909f7/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'The tale so far: the portal at the end of Part One', part: 0, shots: [['From the start', null, GH + 'story-wood-portal-15-poster.webp']] },
     { n: 'Scene 1', head: 'EXT. THE PORTAL WASTELAND — DUSK', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
     { n: 'Scene 2', head: 'EXT. THE ASH DESERT — DAY', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
