@@ -54,7 +54,7 @@ iframe.on{opacity:1;pointer-events:auto;}
   var V = 14, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
-  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var EXTRA = q.toString();
+  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') === '1'; q.delete('scenes'); var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
   function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); return f; }
   function swap() {
     var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i;
@@ -72,7 +72,7 @@ iframe.on{opacity:1;pointer-events:auto;}
   /* the scene picker (Joe, 3 Nov): on by itself in the local preview, elsewhere only with ?scenes=1. A 'Scenes' pill bottom left opens a strip: a tab per
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
-  if (!(/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || q.get('scenes') === '1')) return;
+  if (!(/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || SCN)) return;
   var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/d3c993d8756871914c3ff79871f103b6018909f7/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'The tale so far: the portal at the end of Part One', part: 0, shots: [['From the start', null, GH + 'story-wood-portal-15-poster.webp']] },
     { n: 'Scene 1', head: 'EXT. THE PORTAL WASTELAND — DUSK', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
