@@ -1,0 +1,31 @@
+Storytime 2, Scene 1: lines to record (draft script of 25 Oct; split and choice added 28 Oct)
+
+Save each take as an mp3 in this folder with exactly this name. The demo plays it
+if it is here and falls back to the typing blips if not. The next line waits for
+the recording to finish, so take your time.
+
+File                     Who        Line
+s1-01-narrator.mp3       Narrator   Joe landed with a thud. Everything looked different, like a painting come to life...and the enchanted forest was gone, only ash remained.
+s1-02-joe.mp3            Joe        (thinking, quiet) Something feels...different.
+s1-03-joe.mp3            Joe        Hello? What happened to this place?
+s1-04-grik.mp3           Grik       (alien gibberish, startled, about 2.5 s)
+s1-05-grik.mp3           Grik       Ah. You're not from around here, are you?
+s1-06a-joe.mp3           Joe        I came through that portal.   (the player's first choice)
+s1-06b-joe.mp3           Joe        What happened here?           (the player's second choice)
+s1-06c-grik.mp3          Grik       Through that old thing? It hasn't worked in years.   (only after the first choice; a shrug)
+s1-06d-grik.mp3          Grik       Straight to the gossip, eh?   (only after the second choice)
+s1-07-grik.mp3           Grik       Not even a hello? Kids these days. I'm Grik.
+s1-08-grik.mp3           Grik       A great fire. Some say a winged monster started it.   (plays over the fire memory, about 7 s)
+s1-08b-grik.mp3          Grik       Don't believe all you hear.
+s1-09-joe.mp3            Joe        Can the portal be fixed?
+s1-10-grik.mp3           Grik       Hmm. Folk whisper of a wizard to the east.   (pointing; the castle shows)
+s1-10b-grik.mp3          Grik       I don't believe in whispers.
+s1-11-grik.mp3           Grik       Anyway, stuff to do! See you around, buddy!
+s1-12-joe.mp3            Joe        Uh...I'm Joe.
+s1-13-narrator.mp3       Narrator   But Grik was gone before Joe could get the words out.
+
+Timing notes
+- s1-01 starts as Joe lands and should finish within about 9 s (the thought bubble comes at 9.2 s).
+- s1-02 has 3.6 s on screen.
+- s1-12 plays over Grik's exit clip: keep it under 2 s.
+- Leave a short breath of silence at the start and end of each file.

@@ -1,0 +1,62 @@
+/* Storytime demo kit: the painted scenes framed, captioned and controlled like the engine (storytime.js s146, ?ui=2), so Part One,
+   the painted scenes and the older Storytime 2 scenes look like one tale. Numbers are the engine's own (#jjst.lb #jjst-pane, #jjst.ui2 #jjst-cap, #jjst-ctl). */
+
+/* the picture: full width, 16:9, never narrower than the screen until it is 2.2 times as wide as it is tall; on wide screens it sits a little low */
+.top{display:none!important;}
+.stage{position:fixed;inset:0;display:block;padding:0;gap:0;}
+.pw{position:absolute;inset:0;display:block;container-type:normal;}
+.pane{position:absolute;aspect-ratio:auto;width:min(100vw,220vh);height:calc(.5625 * min(100vw,220vh));left:calc(.5 * (100vw - min(100vw,220vh)));top:calc(.5 * (100vh - .5625 * min(100vw,220vh)));}
+@media (min-aspect-ratio:16/9){.pane{top:calc(.75 * (100vh - .5625 * min(100vw,220vh)));}}
+
+/* the dialogue box: over the bottom of the screen, as the engine's */
+.cap{position:absolute;left:50%;bottom:5vh;translate:-50% 0;margin:0;z-index:15;width:min(66vw,1000px);--fs:clamp(56px,6.2vw,104px);padding:calc(var(--fs) / 2 + 8px) 28px 18px;font-size:clamp(15px,1.6vw,27px);line-height:1.26;}
+.cap .face{left:18px;}
+.cap .who{left:calc(18px + var(--fs) - 4px);font-size:clamp(13px,1.1vw,19px);}
+.cap .tap{margin-top:.5em;font-size:clamp(14px,1.35vw,23px);}
+@media (max-height:430px) and (orientation:landscape){
+  .cap{width:min(66vw,600px);--fs:44px;padding:calc(var(--fs) / 2 + 4px) 14px 10px;bottom:max(6px,2vh);font-size:13px;line-height:1.2;}
+  .cap .face{border-width:2px;}.cap .tap{margin-top:3px;font-size:13px;}
+  #jjk-ctl{gap:6px;}#jjk-ctl .jb{width:36px;height:36px;}#jjk-ctl .jb svg{width:14px;height:14px;}
+}
+
+/* the scene's own corner sound button gives way to the transport's mute */
+.sm{display:none!important;}
+
+/* the transport: back, pause, next, mute; top centre, glass rings */
+#jjk-ctl{position:fixed;left:50%;top:30px;transform:translateX(-50%);z-index:30;display:flex;gap:8px;opacity:0;pointer-events:none;transition:opacity .6s ease;}
+#jjk-ctl.on{opacity:1;pointer-events:auto;}
+#jjk-ctl .jb{position:relative;isolation:isolate;width:48px;height:48px;border:0;background:none;padding:0;border-radius:24.5px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#jjk-ctl .jb::before{content:"";position:absolute;inset:0;z-index:0;border-radius:24.5px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s ease;}
+#jjk-ctl .jb>*{position:relative;z-index:1;}
+#jjk-ctl .jb svg{width:18px;height:18px;display:block;fill:currentColor;}
+#jjk-ctl .jb:hover::before{background:rgba(255,255,255,.5);}
+#jjk-ctl .jb:active::before{background:#ff00f5;}
+#jjk-ctl .jb .pl,#jjk-ctl.paused .jb .pa,#jjk-ctl .jb .mo,#jjk-ctl.muted .jb .mn{display:none;}
+#jjk-ctl.paused .jb .pl,#jjk-ctl.muted .jb .mo{display:block;}
+
+/* paused: nothing behind can be pressed (the tale's rule), the picture dims a touch */
+#jjk-hold{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;padding-bottom:12vh;background:rgba(2,4,14,.42);opacity:0;pointer-events:none;transition:opacity .35s ease;cursor:default;}
+#jjk-hold.on{opacity:1;pointer-events:auto;}
+#jjk-hold span{font-family:"Sketch Gothic School",Georgia,serif;font-size:clamp(56px,9vw,150px);color:#fff;display:block;line-height:1.15;letter-spacing:.06em;text-shadow:0 4px 0 rgba(0,0,0,.6),0 0 26px rgba(255,214,120,.55),0 0 60px rgba(255,197,49,.35);}
+#jjk-hold p{margin:2.4vh 0 0;max-width:min(720px,84vw);text-align:center;color:#fff;font-size:clamp(16px,1.5vw,24px);line-height:1.45;opacity:.9;text-shadow:0 2px 6px rgba(0,0,0,.7);}
+@media (max-height:430px) and (orientation:landscape){#jjk-hold span{font-size:clamp(40px,7vw,64px);}#jjk-hold p{font-size:13px;margin-top:1vh;}}
+
+/* the sound prompt, as the engine's */
+#jjk-snd{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .4s ease;}
+#jjk-snd.on{opacity:1;pointer-events:auto;}
+#jjk-snd .card{max-width:640px;padding:28px 32px 30px;border-radius:26px;background:rgba(0,0,0,.26);border:1.5px solid rgba(255,255,255,.5);box-shadow:0 0 60px rgba(0,0,0,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);text-align:center;}
+#jjk-snd .q{margin:0 0 10px;font-size:clamp(20px,2vw,28px);}
+#jjk-snd .sub{margin:0 0 22px;font-size:clamp(13px,1.1vw,16px);opacity:.85;}
+#jjk-snd .sub b{color:#ff00f5;font-weight:inherit;}
+#jjk-snd .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+#jjk-snd button{font:inherit;font-size:clamp(14px,1.2vw,18px);color:#fff;padding:12px 22px;min-width:210px;border-radius:8px;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.11);cursor:pointer;transition:background .2s ease;}
+#jjk-snd button.secondary{filter:brightness(.74) saturate(.7);opacity:.92;}
+#jjk-snd button.yes{box-shadow:0 0 22px rgba(255,255,255,.22);}
+#jjk-snd button:hover{background:rgba(255,255,255,.5);}
+#jjk-snd button:active{background:#ff00f5;}
+
+/* the one-flow page: no cover, no scene buttons; the next part follows by itself */
+.jjk-flow .cover{opacity:0!important;pointer-events:none!important;}
+
+/* the thought bubble at the tale's bubble size */
+.bub{font-size:clamp(14px,1.15vw,20px);}

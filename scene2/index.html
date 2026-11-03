@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Storytime 2 · Scene 2</title>
+<meta name="description" content="Storytime 2, Scene 2 in the painted style: the ash desert, the signpost, the nest and the oasis.">
+<style>
+/* Storytime 2 · Scene 2 in the painted style (Joe, 28 Oct: 'can i see it from the beginning with grik', then 'what can we do for the wasteland scene too').
+   2.1 and 2.4 are one wide: an empty-plate loop from Dreamina under everything, the sky turned further by a flow-map shader, and Joe lifted out of
+   his two clips (the walk, the drop) by difference against the still plate, so the cuts never show. 2.2 and 2.3 are the painted stills with the same sky.
+   On top: days passing on the walk with footprints in the ash, a storm that builds to the nest, soot to rub off the sign, an eggshell clue in the nest,
+   and the collapse (slow, grey, tunnel vision, heartbeat) with the oasis the only colour left; tap it to focus. */
+@font-face{font-family:"Joes Journey Headline";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532594d_Joes%20Journey%20Headline.otf") format("opentype");font-display:swap;}
+:root{--ink:#3a2a12;--paper:#f3e2ba;--pink:#FF00F5;--bg:#04060b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font-family:"Joes Journey Headline",sans-serif;}
+body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidden;}
+.top{display:flex;justify-content:center;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 16px 6px;font-size:15px;opacity:.8;}
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+.pw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size;}
+.pane{position:relative;flex:none;width:min(100cqw,calc(100cqh * 16 / 9));aspect-ratio:16/9;overflow:hidden;background:var(--bg);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);mask-composite:intersect;}
+.shot{position:absolute;inset:0;opacity:0;transition:opacity .4s ease;}
+.shot.on{opacity:1;}
+.cam{position:absolute;inset:0;transform-origin:50% 50%;transition:transform 9s cubic-bezier(.3,0,.25,1),filter 1.6s ease,opacity 1.6s ease;}
+.cam.out{transition:none;}
+.cam canvas{position:absolute;inset:0;width:100%;height:100%;}
+.src{position:absolute;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none;}
+.joe{position:absolute;left:68.75%;top:33.333%;width:31.25%;height:50%;opacity:0;transition:opacity .2s,filter 1.4s ease;z-index:3;}
+.joe.on{opacity:1;}
+/* the collapse: everything but the oasis drains to grey */
+.grey{filter:saturate(.1) brightness(.82) contrast(1.05)!important;}
+#skyw,#prints{transition:filter 1.4s ease;}
+#oasis{position:absolute;inset:auto;left:90.5%;top:39.6%;width:10%;height:auto;aspect-ratio:420/222;opacity:0;transition:opacity 2.5s ease,scale 1.2s ease;z-index:2;}
+#glow{position:absolute;left:87%;top:33%;width:17%;height:22%;border-radius:50%;background:radial-gradient(closest-side,rgba(90,255,230,.35),rgba(90,255,230,0));opacity:0;transition:opacity 2.5s ease,scale 1.2s ease;z-index:1;mix-blend-mode:screen;}
+#oasis.on,#glow.on{opacity:1;}
+#oasis.focus{scale:1.12;}#glow.focus{scale:1.4;}
+/* days passing: a night tint and a dawn tint over the wide, stars and a moon in the sky */
+.tod{position:absolute;inset:0;z-index:4;mix-blend-mode:multiply;opacity:0;pointer-events:none;}
+#night{background:linear-gradient(#3a3f8c,#5b5fa8 55%,#6c6aa0);}
+#dawn{background:linear-gradient(#ffb7a8,#ffd2a0 60%,#fff0e0);}
+#stars{z-index:4;pointer-events:none;}
+#shard{position:absolute;left:77.6%;top:66.8%;width:2.6%;opacity:0;transition:opacity .6s ease;filter:drop-shadow(0 0 3px rgba(255,190,90,.9));z-index:2;}
+#shard.on{opacity:1;animation:glint 1.4s ease-in-out infinite;}
+#shard.took{opacity:0;translate:-260% 300%;scale:.35;rotate:-40deg;transition:opacity .9s ease .2s,translate .9s cubic-bezier(.5,0,.75,.4),scale .9s ease,rotate .9s ease;animation:none;}
+@keyframes glint{50%{filter:drop-shadow(0 0 9px rgba(255,220,140,1)) brightness(1.25);}}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 55%,transparent 45%,rgba(10,4,12,.55));pointer-events:none;}
+#melt.melt{filter:blur(10px) saturate(1.4) brightness(1.5);opacity:0;}
+#murk{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;background:linear-gradient(rgba(16,6,10,.85),rgba(30,14,10,.25) 55%,rgba(10,6,6,.5));}
+#dust,#embers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+#dust{z-index:4;}#embers{z-index:5;}
+#tunnel{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;--r:95%;background:radial-gradient(circle at 84% 52%,transparent calc(var(--r) - 40%),rgba(0,0,0,.92) var(--r));transition:opacity 1.2s ease,--r 2.4s ease;}
+@property --r{syntax:'<percentage>';inherits:false;initial-value:95%;}
+#tunnel.on{opacity:1;--r:52%;}
+#dip{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .45s ease;pointer-events:none;z-index:8;}
+#dip.on{opacity:1;}
+#signbox{position:absolute;right:3%;top:3%;width:34%;aspect-ratio:760/666;z-index:7;transform-origin:50% 0;rotate:-16deg;translate:0 -8%;opacity:0;transition:rotate .9s cubic-bezier(.3,1.7,.5,1),translate .9s ease,opacity .35s ease;filter:drop-shadow(0 8px 16px rgba(0,0,0,.55));pointer-events:none;}
+#signbox.on{rotate:0deg;translate:0 0;opacity:1;}
+#signbox img,#signbox canvas{position:absolute;inset:0;width:100%;height:100%;}
+#soot{touch-action:none;cursor:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g transform='rotate(-20 24 24)'><rect x='9' y='12' width='30' height='13' rx='5' fill='%238a5a2b' stroke='%233b2412' stroke-width='2'/><rect x='13' y='15' width='22' height='3' rx='1.5' fill='%23b07a43'/><path d='M11 24h26l-1 9q-12 3-24 0z' fill='%23e9d3a1' stroke='%233b2412' stroke-width='1.6' stroke-linejoin='round'/><path d='M15 25v7M19 25v8M23 25v8M27 25v8M31 25v8M34 25v7' stroke='%237a5a30' stroke-width='1' opacity='.7'/></g></svg>") 24 32,grab;transition:opacity 1.2s ease;}
+#signbox.rub{pointer-events:auto;}
+.sm{position:absolute;top:10px;right:10px;z-index:20;font-size:13px;}
+.snd{display:flex;align-items:center;gap:7px;font:inherit;color:#fff;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px 5px 9px;cursor:pointer;margin-left:auto;transition:background .2s ease;}
+.snd:hover{background:rgba(255,255,255,.18);}.snd:active{background:#ff00f5;}
+.snd svg{width:16px;height:16px;display:block;}.snd .x{display:none;}.sm.mute .snd .w{display:none;}.sm.mute .snd .x{display:inline;}
+.bub{position:absolute;z-index:6;max-width:44%;display:grid;grid-template-columns:auto minmax(0,max-content);column-gap:9px;align-items:center;padding:7px 14px 7px 7px;border-radius:14px;border:1px solid rgba(255,255,255,.5);background:rgba(14,18,30,.9);transform:translateY(calc(-100% - 16px));
+  font-size:clamp(11px,2.4vw,18px);line-height:1.25;opacity:0;translate:0 6px;transition:opacity .35s ease,translate .35s ease;pointer-events:none;}
+.bub.on{opacity:1;translate:0 0;}
+.bub .bface{grid-column:1;grid-row:1 / span 2;width:2.6em;height:2.6em;border-radius:50%;border:2px solid var(--who,#1f4fa0);background:center/cover no-repeat;}
+.bub b{grid-column:2;align-self:end;font-weight:normal;font-size:.75em;opacity:.7;}
+.bub span{grid-column:2;align-self:start;font-style:italic;}
+.bub::before,.bub::after{content:"";position:absolute;border-radius:50%;background:rgba(14,18,30,.9);border:1px solid rgba(255,255,255,.5);}
+.bub::before{left:16px;bottom:-12px;width:12px;height:12px;}.bub::after{left:10px;bottom:-21px;width:7px;height:7px;}
+.ring{position:absolute;z-index:7;width:max(44px,var(--w,12%));aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid rgba(255,230,140,.95);box-shadow:0 0 14px rgba(255,214,90,.8),inset 0 0 12px rgba(255,214,90,.5);
+  background:radial-gradient(closest-side,rgba(255,240,180,.25),rgba(255,240,180,0));opacity:0;pointer-events:none;cursor:pointer;transition:opacity .4s ease;animation:pulse 1.6s ease-in-out infinite;left:70.5%;top:51%;}
+.ring.on{opacity:1;pointer-events:auto;}
+@keyframes pulse{50%{scale:1.12;}}
+.cover{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(4,6,11,.45);transition:opacity .4s ease;}
+.cover button,.cover a{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer;text-decoration:none;}
+.cover span{display:block;font-size:18px;padding:10px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:background .2s ease;}
+.cover span:hover{background:rgba(255,255,255,.5);}.cover :active>span{background:var(--pink);}
+.cover a span{font-size:15px;}
+.cover.off{opacity:0;pointer-events:none;}
+.cover a[hidden]{display:none;}
+.cap{position:relative;width:min(92vw,720px);margin:calc(var(--fs) / 2) auto 0;--fs:clamp(62px,17vw,90px);padding:calc(var(--fs) / 2 + 8px) 20px 18px;border-radius:16px;background:var(--paper);background:color-mix(in srgb,var(--paper) 84%,var(--who,#6b4a1e));color:var(--ink);transition:background .35s ease,box-shadow .35s ease;
+  box-shadow:0 0 0 4px var(--who,#6b4a1e),0 0 0 6px rgba(0,0,0,.55),0 0 30px color-mix(in srgb,var(--who,#6b4a1e) 60%,transparent),0 8px 28px rgba(0,0,0,.6);font-size:clamp(15px,4.2vw,21px);line-height:1.3;cursor:pointer;}
+.cap .face{position:absolute;left:16px;top:0;translate:0 -50%;width:var(--fs);aspect-ratio:1;z-index:3;border-radius:50%;border:4px solid var(--who,#6b4a1e);background:#e9d6a8 center/cover no-repeat;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:border-color .3s ease;}
+.cap .who{position:absolute;z-index:3;top:0;left:calc(16px + var(--fs) - 4px);translate:0 -50%;padding:4px 14px 5px;border-radius:999px;background:var(--who,#6b4a1e);color:#fff;font-size:.82em;line-height:1.2;box-shadow:0 0 0 2px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.35);transition:background .35s ease;white-space:nowrap;}
+.cap .txt{white-space:pre-wrap;}
+.cap .tap{margin-top:10px;color:#7a2f9a;opacity:0;transition:opacity .4s ease;}
+.cap .tap.on{opacity:1;}
+.cap .nx{position:absolute;right:16px;bottom:10px;display:flex;align-items:center;gap:7px;font-size:.72em;color:color-mix(in srgb,var(--who,#6b4a1e) 65%,#000);opacity:0;transition:opacity .3s ease;pointer-events:none;}
+/* Next, as in Pokemon and Animal Crossing: a bobbing arrow at the bottom-right of the box once the line is fully typed, with the progress line
+   (how long until it moves on by itself) running into it; a line that waits for you has its line full, gently glowing */
+.cap .nx.on{opacity:1;}
+.cap .nx .pg{width:72px;height:3px;border-radius:3px;overflow:hidden;background:color-mix(in srgb,var(--who,#6b4a1e) 22%,transparent);}
+.cap .nx .pg b{display:block;height:100%;background:var(--who,#6b4a1e);transform-origin:0 50%;transform:scaleX(0);}
+.cap .nx.wait .pg b{animation:nxglow 1.6s ease-in-out infinite;}
+.cap .nx .arw{width:12px;height:8px;fill:currentColor;animation:nxbob .9s ease-in-out infinite;}
+@keyframes nxbob{50%{transform:translateY(3px);}}
+@keyframes nxglow{50%{opacity:.45;}}
+@media (orientation:landscape) and (max-height:560px){
+  .top{display:none;}.stage{padding:0;gap:0;position:relative;}.pw{height:100%;}
+  .cap{position:absolute;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));translate:-50% 0;width:min(78vw,640px);margin:0;--fs:48px;padding:calc(var(--fs) / 2 + 4px) 14px 10px;font-size:14px;z-index:15;}
+  .cap .face{border-width:2px;}.cap .tap{margin-top:4px;}
+}
+</style>
+<link rel="stylesheet" href="../kit.css?v=6">
+<script src="../kit.js?v=6"></script>
+</head>
+<body>
+<div class="top">Storytime 2 · Scene 2 · painted test</div>
+<div class="stage">
+  <div class="pw"><div class="pane" id="pane">
+    <video class="src" id="bgv" src="s2-bg.mp4" muted loop playsinline preload="auto"></video>
+    <img class="src" id="psign" src="plate-sign.jpg" alt=""><img class="src" id="pnest" src="plate-nest.jpg" alt="">
+    <div id="melt" class="cam">
+      <div class="shot on" id="wide"><div class="cam out" id="camw"><canvas id="skyw"></canvas><canvas id="prints"></canvas><div id="glow"></div><canvas id="oasis" width="420" height="222"></canvas>
+        <video class="joe" id="walk" muted playsinline preload="auto"><source src="s2-walk.mov" type='video/mp4; codecs="hvc1"'><source src="s2-walk.webm" type="video/webm"></video>
+        <video class="joe" id="drop" muted playsinline preload="auto"><source src="s2-drop.mov" type='video/mp4; codecs="hvc1"'><source src="s2-drop.webm" type="video/webm"></video>
+        <div class="tod" id="night"></div><div class="tod" id="dawn"></div><canvas id="stars"></canvas></div></div>
+      <div class="shot" id="sshot"><div class="cam out" id="cams"><canvas id="skys"></canvas><div class="vig"></div></div></div>
+      <div class="shot" id="nshot"><div class="cam out" id="camn"><canvas id="skyn"></canvas><img id="shard" src="shard.webp" alt="A shard of red eggshell"><div class="vig"></div></div></div>
+    </div>
+    <div id="murk"></div>
+    <canvas id="dust"></canvas>
+    <canvas id="embers"></canvas>
+    <div id="tunnel"></div>
+    <div id="signbox"><img id="sign" src="sign.webp" alt="A burnt sign: Welcome to ...head. Home of the ..."><canvas id="soot" width="760" height="666"></canvas></div>
+    <div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div>
+    <div class="ring" id="ring" role="button" aria-label="Tap here"></div>
+    <div id="dip"></div>
+    <div class="cover" id="cover"><button id="go"><span>Play scene 2</span></button><a id="back" href="../scene1/?v=8"><span>‹ Scene 1</span></a><a id="next3" href="../scene3/?v=8" hidden><span>Scene 3 ›</span></a></div>
+    <div class="sm" id="sm"><button class="snd" id="snd" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="x" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Sound</button></div>
+  </div></div>
+  <div class="cap" id="cap"><div class="face" id="face"></div><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="tap" id="tap"></div><div class="nx" id="nx"><i class="pg"><b></b></i>Next<svg class="arw" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1h10L6 7z"/></svg></div></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var bgv = $('bgv'), walk = $('walk'), drop = $('drop'), wide = $('wide'), sshot = $('sshot'), nshot = $('nshot'), camw = $('camw'), cams = $('cams'), camn = $('camn'), melt = $('melt'),
+      oasis = $('oasis'), glow = $('glow'), signbox = $('signbox'), soot = $('soot'), bub = $('bub'), ring = $('ring'), dip = $('dip'), cover = $('cover'), go = $('go'),
+      shard = $('shard'), tunnel = $('tunnel'), murk = $('murk'), night = $('night'), dawn = $('dawn'), stars = $('stars'), prints = $('prints'), skyw = $('skyw'),
+      cap = $('cap'), face = $('face'), who = $('who'), txt = $('txt'), tap = $('tap'), nx = $('nx'), snd = $('snd'), sm = $('sm');
+  var BOOK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#e9d6a8"/><path d="M10 20c8-3 15-2 22 3v25c-7-5-14-6-22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/><path d="M54 20c-8-3-15-2-22 3v25c7-5 14-6 22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/></svg>');
+  var WHO = { Narrator: ['#6b4a1e', BOOK], Joe: ['#1f4fa0', 'face-joe.jpg'] };
+  var run = 0, timers = [], typeT = 0, step = '';
+  function later(fn, ms) { var r = run; timers.push(setTimeout(function () { if (r === run) fn(); }, ms)); }
+  function show(el, on) { el.classList.toggle('on', !!on); }
+  function play(v) { try { v.currentTime = 0; } catch (e) {} var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  function prompt(s) { tap.textContent = s || ''; show(tap, !!s); }
+  function ringAt(x, y, w) { ring.style.left = x * 100 + '%'; ring.style.top = y * 100 + '%'; ring.style.setProperty('--w', (w || 12) + '%'); show(ring, 1); }
+
+  /* ---- sound: the wasteland track carries on from Scene 1 and fades as Joe sights the oasis; wind that grows with the storm; a heartbeat as he falls.
+     The same one-press mute and saved preference as Scene 1. */
+  /* Scene 3's oasis track (story2-music-oasis), its intro: in the one flow it comes in under the sighting and plays on into Scene 3, which carries on with the same track from its LIFT (25.28 s).
+     From 9 s: about 16 s of intro before the lift, about the time from the sighting to Scene 3's first frame at an easy pace (a slower one goes round the intro again); at Scene 3's own level (its full .093) */
+  var OASIS_IN = { from: 9, until: 24.8, vol: .093, inMs: 2500 };
+  var TEST = /[?&]mute=1/.test(location.search), PREF = { on: true, music: .8, fx: .8, voice: 1 };
+  try { var sv = JSON.parse(localStorage.getItem('jjSound') || 'null'); if (sv) for (var k in PREF) if (k in sv) PREF[k] = sv[k]; } catch (e) {}
+  if (TEST) PREF.on = false;
+  function savePref() { if (TEST) return; try { localStorage.setItem('jjSound', JSON.stringify(PREF)); } catch (e) {} }
+  /* the local preview (site proxy) starts every page muted (jjUserMuted); here, as with the site's moon, this page's own sound button turns it on */
+  var HELD = false; try { HELD = sessionStorage.getItem('jjUserMuted') === '1'; } catch (e) {}
+  var soundOn = PREF.on && !HELD, music = window.jjKit ? jjKit.music('../scene1/music.mp3') : new Audio('../scene1/music.mp3'), mvol = 1, fadeT = 0, AC = null, windG = null, NOISE = null, scrubG = null, scrubV = 0; music.loop = true;
+  var voNow = null;
+  function vo(id) { if (voNow) { voNow.pause(); voNow = null; } if (!id || !soundOn) return; var a = new Audio('vo/' + id + '.mp3'); a.volume = PREF.voice;
+    a.addEventListener('error', function () { if (a === voNow) voNow = null; }); voNow = a; var p = a.play(); if (p && p.catch) p.catch(function () {}); }
+  function levels() { music.volume = .4 * PREF.music * mvol; if (voNow) voNow.volume = PREF.voice; }
+  function setSound(on) { if (on && HELD) { HELD = false; try { sessionStorage.setItem('jjUserMuted', '0'); } catch (e) {} music.muted = false; }
+    soundOn = PREF.on = on; sm.classList.toggle('mute', !on); snd.setAttribute('aria-pressed', !on); snd.lastChild.textContent = on ? 'Mute' : 'Sound on'; levels();
+    if (!on) { music.pause(); if (voNow) { voNow.pause(); voNow = null; } } else if (cover.classList.contains('off') && mvol > 0) { var p = music.play(); if (p && p.catch) p.catch(function () {}); } }
+  snd.addEventListener('click', function () { setSound(!soundOn); savePref(); });
+  setSound(soundOn);
+  function fadeMusic(ms) { clearInterval(fadeT); var t0 = performance.now(); fadeT = setInterval(function () { mvol = Math.max(0, 1 - (performance.now() - t0) / ms); levels(); if (!mvol) { clearInterval(fadeT); music.pause(); } }, 50); }
+  function audio() { if (AC) return; try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    var n = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate), d = n.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    var src = AC.createBufferSource(), bp = AC.createBiquadFilter(); src.buffer = n; src.loop = true; bp.type = 'bandpass'; bp.frequency.value = 420; bp.Q.value = .6;
+    windG = AC.createGain(); windG.gain.value = 0; src.connect(bp); bp.connect(windG); windG.connect(AC.destination); src.start(); NOISE = n;
+    // the rag on the sign: high, papery noise that only sounds while the hand is moving
+    var s2 = AC.createBufferSource(), hp = AC.createBiquadFilter(); s2.buffer = n; s2.loop = true; s2.playbackRate.value = .9; hp.type = 'bandpass'; hp.frequency.value = 2600; hp.Q.value = .8;
+    scrubG = AC.createGain(); scrubG.gain.value = 0; s2.connect(hp); hp.connect(scrubG); scrubG.connect(AC.destination); s2.start(); }
+  // one footstep in the ash: a short, dull puff of noise, a little different each time
+  function crunch() { if (!AC || !NOISE || !soundOn) return; var t = AC.currentTime, b = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+    b.buffer = NOISE; b.playbackRate.value = .7 + Math.random() * .5; f.type = 'lowpass'; f.frequency.value = 900 + Math.random() * 700; f.Q.value = 1.2;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.16 * PREF.fx, t + .012); g.gain.exponentialRampToValueAtTime(.001, t + .13);
+    b.connect(f); f.connect(g); g.connect(AC.destination); b.start(t, Math.random() * 1.5, .16); }
+  // the eggshell goes in his pocket: a small two-note bell
+  function chime() { if (!AC || !soundOn) return; var t = AC.currentTime + .02;
+    [[1318.5, 0, .09], [1975.5, .11, .08], [2637, .11, .025]].forEach(function (n) { var o = AC.createOscillator(), g = AC.createGain(), s = t + n[1];
+      o.type = 'sine'; o.frequency.value = n[0]; g.gain.setValueAtTime(0, s); g.gain.linearRampToValueAtTime(n[2] * PREF.fx, s + .008); g.gain.exponentialRampToValueAtTime(.0005, s + 1.4);
+      o.connect(g); g.connect(AC.destination); o.start(s); o.stop(s + 1.5); }); }
+  function heartbeat(n) { if (!AC || !soundOn) return; var t = AC.currentTime + .05;
+    for (var i = 0; i < n; i++) [[0, .55], [.2, .35]].forEach(function (b) { var o = AC.createOscillator(), g = AC.createGain(), s = t + i * .95 + b[0];
+      o.frequency.setValueAtTime(75, s); o.frequency.exponentialRampToValueAtTime(38, s + .16); g.gain.setValueAtTime(0, s); g.gain.linearRampToValueAtTime(b[1] * .8 * PREF.fx, s + .012); g.gain.exponentialRampToValueAtTime(.001, s + .28);
+      o.connect(g); g.connect(AC.destination); o.start(s); o.stop(s + .3); }); }
+
+  function speaker(n) { var w = WHO[n] || WHO.Narrator; cap.style.setProperty('--who', w[0]); face.style.backgroundImage = 'url("' + w[1] + '")'; who.textContent = n; }
+  function type(n, s, id) { vo(id); clearInterval(typeT); speaker(n); txt.textContent = ''; var i = 0; full = s; typing = true; lineAt = performance.now(); nx.classList.remove('on');
+    typeT = setInterval(function () { i++; txt.textContent = s.slice(0, i); if (i >= s.length) { clearInterval(typeT); typing = false; nxReady(); } }, 34); }
+
+  /* Next: shown only once the line is fully typed and at least a second after it appeared; a press while it types finishes the line instead of skipping it,
+     and a press in that first second does nothing (Joe, 30 Oct: a press meant for one line skipped the next) */
+  var nxB = nx.querySelector('.pg b'), nxA = null, nxT = 0, nxWant = false, typing = false, full = '', lineAt = 0;
+  function nxReady() { clearTimeout(nxT); nxT = setTimeout(function () { if (nxWant && !typing) nx.classList.add('on'); }, Math.max(0, 1000 - (performance.now() - lineAt))); }
+  function nxOn(ms) { nxWant = true; if (nxA) { nxA.cancel(); nxA = null; } nx.classList.toggle('wait', !ms);
+    if (ms && nxB.animate) { nxB.style.transform = ''; nxA = nxB.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: ms, easing: 'linear', fill: 'forwards' }); } else nxB.style.transform = 'scaleX(1)'; nxReady(); }
+  function nxOff() { nxWant = false; clearTimeout(nxT); if (nxA) { nxA.cancel(); nxA = null; } nx.classList.remove('on'); }
+  function finishType() { clearInterval(typeT); txt.textContent = full; typing = false; nxReady(); }
+  function gate() { if (performance.now() - lineAt < 1000) return false; if (typing) { finishType(); return false; } return true; }
+  function think(n, s, x, y, id) { vo(id); lineAt = performance.now(); var w = WHO[n]; bub.style.setProperty('--who', w[0]); bub.querySelector('.bface').style.backgroundImage = 'url("' + w[1] + '")';
+    bub.querySelector('b').textContent = n + ', thinking'; bub.querySelector('span').textContent = s; bub.style.left = 'calc(' + x * 100 + '% - 24px)'; bub.style.top = y * 100 + '%'; show(bub, 1); }
+
+  var N1 = 'Joe walked for days through a desert of ash. Embers drifted on the wind, and burnt villages poked through the dust...',
+      N2 = 'Just as his legs gave way, Joe saw it...a glowing oasis, shimmering in the distance.',
+      N3 = 'Was it real, or was the desert playing tricks?';
+  function fitCap() { var a = who.textContent, b = txt.textContent, m = 0; cap.style.height = 'auto'; tap.style.display = 'block'; var c = tap.textContent; tap.textContent = 'Rub the soot off the sign';
+    [N1, N2].forEach(function (l) { who.textContent = 'Narrator'; txt.textContent = l; m = Math.max(m, cap.offsetHeight); }); who.textContent = a; txt.textContent = b; tap.textContent = c; cap.style.height = m + 'px'; }
+  fitCap(); addEventListener('resize', fitCap); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCap);
+
+  /* ---- the sky: each picture drawn through a flow map, so its painted spirals turn without smearing. Per picture: four spirals (x, y, radius, spin),
+     the sky line (full above Y.x, still below Y.y) and up to three boxes kept still (houses, trees, Joe). */
+  var SWIRL = 3;
+  var FS = 'precision mediump float;varying vec2 uv;uniform sampler2D tex;uniform float t,k;uniform vec4 S[4];uniform vec4 E[3];uniform vec2 Y;' +
+    'vec2 spin(vec2 q,vec4 s){vec2 d=q-s.xy;d.y*=.5625;float r=length(d);float f=smoothstep(s.z,s.z*.15,r);return s.w*f*vec2(-d.y,d.x)/max(r,.02)*.5;}' +
+    'float box(vec2 q,vec4 b){vec2 a=smoothstep(b.xy-.03,b.xy+.01,q)*smoothstep(b.zw+.03,b.zw-.01,q);return a.x*a.y;}' +
+    'void main(){vec2 fl=spin(uv,S[0])+spin(uv,S[1])+spin(uv,S[2])+spin(uv,S[3])*.6+vec2(.12,-.04);' +
+    'float m=smoothstep(Y.y,Y.x,uv.y);m*=1.-box(uv,E[0]);m*=1.-box(uv,E[1]);m*=1.-box(uv,E[2]);fl*=m*k*.035;' +
+    'float P=3.2;float a=fract(t/P),b=fract(t/P+.5);gl_FragColor=mix(texture2D(tex,uv-fl*a),texture2D(tex,uv-fl*b),abs(1.-2.*a));}';
+  var VS = 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
+  var NO = [2, 2, 2, 2];
+  function Sky(canvas, src, cfg) {
+    var gl = canvas.getContext('webgl'); if (!gl) return null;
+    function sh(type, s) { var o = gl.createShader(type); gl.shaderSource(o, s); gl.compileShader(o); return o; }
+    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.uniform4fv(gl.getUniformLocation(pr, 'S'), [].concat.apply([], cfg.s));
+    gl.uniform4fv(gl.getUniformLocation(pr, 'E'), [].concat.apply([], (cfg.e.concat([NO, NO, NO])).slice(0, 3)));
+    gl.uniform2fv(gl.getUniformLocation(pr, 'Y'), cfg.y);
+    var uT = gl.getUniformLocation(pr, 't'), uK = gl.getUniformLocation(pr, 'k'), loaded = false, isVid = src.tagName === 'VIDEO', fresh = true;
+    // a video frame is uploaded only when there is a new one (the loop is 30 fps, the screen usually 60)
+    if (isVid && src.requestVideoFrameCallback) (function tick() { src.requestVideoFrameCallback(function () { fresh = true; tick(); }); })();
+    return function draw(now) {
+      var r = canvas.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(canvas.offsetWidth * d), h = Math.round(canvas.offsetHeight * d);
+      if (!w) return; if (canvas.width !== w) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+      if (isVid) { if (src.readyState < 2) return; if (fresh || !src.requestVideoFrameCallback) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); fresh = false; } }
+      else if (!loaded) { if (!src.complete || !src.naturalWidth) return; gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); loaded = true; }
+      gl.uniform1f(uT, now / 1000); gl.uniform1f(uK, SWIRL); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+  }
+  var skyW = Sky(skyw, bgv, { s: [[.875, .17, .12, 1], [.27, .06, .10, -1], [.60, .08, .09, 1], [.58, .27, .06, -1]], y: [.30, .44], e: [[-.1, .08, .32, 1.1], [-.1, -.1, .09, 1.1]] });
+  var skyS = Sky($('skys'), $('psign'), { s: [[.87, .17, .12, 1], [.33, .08, .10, -1], [.56, .21, .08, 1], [.12, .05, .07, -1]], y: [.24, .36], e: [[-.1, .08, .20, 1.1], [.13, .24, .47, 1.1]] });
+  var skyN = Sky($('skyn'), $('pnest'), { s: [[.78, .10, .12, -1], [.27, .10, .11, 1], [.93, .33, .08, 1], [.50, .25, .08, 1]], y: [.26, .38], e: [[.56, .24, .72, 1.1], [-.1, .18, .21, 1.1]] });
+
+  /* ---- days passing on the walk: night falls and lifts again, with stars and a moon; footprints stay in the ash behind him */
+  var FEET = []; fetch('feet.json').then(function (r) { return r.json(); }).then(function (j) { FEET = j; }).catch(function () {});
+  var pc = prints.getContext('2d'), sc = stars.getContext('2d'), fi = 0, lastPrint = -1, side = 1, STARS = [];
+  for (var i = 0; i < 90; i++) STARS.push([Math.random(), Math.random() * .4, .4 + Math.random() * 1.2, Math.random() * 6.3]);
+  function bump(t, a, b, c, d) { return t < a || t > d ? 0 : t < b ? (t - a) / (b - a) : t <= c ? 1 : 1 - (t - c) / (d - c); }
+  function fit(cv) { var d = Math.min(devicePixelRatio || 1, 2), w = Math.round(cv.offsetWidth * d), h = Math.round(cv.offsetHeight * d); if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; return true; } return false; }
+  function stamp(f) { var W = prints.width, H = prints.height, x = (f[1] + side * f[3] * .22) * W, y = f[2] * H, rx = W * .0085, ry = H * .0062; side = -side;
+    var g = pc.createRadialGradient(x, y, 0, x, y, rx); g.addColorStop(0, 'rgba(34,20,26,.75)'); g.addColorStop(.7, 'rgba(34,20,26,.45)'); g.addColorStop(1, 'rgba(40,26,30,0)');
+    pc.save(); pc.translate(x, y); pc.scale(1, ry / rx); pc.translate(-x, -y); pc.fillStyle = g; pc.beginPath(); pc.arc(x, y, rx, 0, 6.29); pc.fill(); pc.restore(); }
+  function walkFrame(now) { var t = walk.currentTime, nt = step === 'walk' ? bump(t, 1.2, 2.8, 4.4, 6.0) : 0, dn = step === 'walk' ? bump(t, 5.0, 5.9, 6.3, 7.4) : 0;
+    night.style.opacity = (nt * .8).toFixed(3); dawn.style.opacity = (dn * .55).toFixed(3);
+    if (fit(prints)) { fi = 0; lastPrint = -1; }
+    while (fi < FEET.length && FEET[fi][0] <= t && step === 'walk') { if (FEET[fi][0] - lastPrint >= .38) { stamp(FEET[fi]); if (t - FEET[fi][0] < .15) crunch(); lastPrint = FEET[fi][0]; } fi++; }
+    fit(stars); var W = stars.width, H = stars.height; sc.clearRect(0, 0, W, H); if (nt <= 0) return;
+    var s = now / 1000; sc.globalAlpha = nt;
+    STARS.forEach(function (p) { var a = (.55 + .45 * Math.sin(s * 2 + p[3])) * (1 - p[1] * 1.6); sc.fillStyle = 'rgba(255,250,235,' + a.toFixed(3) + ')'; sc.beginPath(); sc.arc(p[0] * W, p[1] * H, p[2] * W / 1600, 0, 6.29); sc.fill(); });
+    var mx = W * (.18 + .1 * (t - 1.2) / 5), my = H * .13, mr = W * .022, g = sc.createRadialGradient(mx, my, mr * .6, mx, my, mr * 3.2);
+    g.addColorStop(0, 'rgba(255,248,225,.55)'); g.addColorStop(1, 'rgba(255,248,225,0)'); sc.fillStyle = g; sc.beginPath(); sc.arc(mx, my, mr * 3.2, 0, 6.29); sc.fill();
+    sc.fillStyle = 'rgba(255,250,232,.95)'; sc.beginPath(); sc.arc(mx, my, mr, 0, 6.29); sc.fill(); sc.globalAlpha = 1; }
+
+  /* ---- the storm: dust streaming left to right in layers, the sky darkening, gusts that shove everything sideways; the wind sound follows it */
+  var dc = $('dust').getContext('2d'), DUST = [], storm = 0, stormTo = 0, gust = 0, nextGust = 4;
+  var streak = document.createElement('canvas'); streak.width = 128; streak.height = 4;
+  (function () { var c = streak.getContext('2d'), g = c.createLinearGradient(0, 0, 128, 0); g.addColorStop(0, 'rgba(225,200,175,0)'); g.addColorStop(1, 'rgba(225,200,175,1)'); c.fillStyle = g; c.fillRect(0, 0, 128, 4); })();
+  for (var i = 0; i < 160; i++) DUST.push({ x: Math.random(), y: Math.random(), z: .3 + Math.random() * .7, l: .02 + Math.random() * .05 });
+  function dustFrame(dt) { storm += (stormTo - storm) * Math.min(1, dt * .8); nextGust -= dt;
+    if (nextGust < 0) { gust = 1; nextGust = 3.5 + Math.random() * 3; } gust = Math.max(0, gust - dt * .9);
+    if (windG && AC) windG.gain.setTargetAtTime(soundOn ? (.05 + storm * .22) * (1 + gust * 1.2) * .455 * PREF.fx : 0, AC.currentTime, .3);
+    murk.style.opacity = (storm * .55).toFixed(3);
+    var cv = $('dust'); fit(cv); var W = cv.width, H = cv.height; dc.clearRect(0, 0, W, H); if (storm < .02) return;
+    var n = Math.round(DUST.length * Math.min(1, storm)), sp = .35 + gust * .9;
+    for (var i = 0; i < n; i++) { var p = DUST[i]; p.x += sp * p.z * dt * (.6 + storm); p.y += Math.sin(p.x * 9 + i) * dt * .02;
+      if (p.x > 1.1) { p.x = -.1 - Math.random() * .2; p.y = Math.random(); }
+      var x = p.x * W, y = p.y * H, L = p.l * W * (1 + gust), a = (.10 + .22 * p.z) * Math.min(1, storm * 1.3), lw = Math.max(1, p.z * 2.2 * W / 1600);
+      dc.globalAlpha = a; dc.setTransform(1, 0, 0, 1, x - L, y - L * .04); dc.rotate(Math.atan2(L * .04, L)); dc.drawImage(streak, 0, -lw / 2, L, lw); }
+    dc.setTransform(1, 0, 0, 1, 0, 0); dc.globalAlpha = 1; }
+
+  /* ---- the sign: it swings down covered in soot; rub it clean */
+  var xc = soot.getContext('2d'), signImg = $('sign'), sootFull = 0, rubbing = false, cleanT = 0;
+  function sootUp() { xc.globalCompositeOperation = 'source-over'; xc.clearRect(0, 0, 760, 666); xc.fillStyle = 'rgba(26,18,14,.95)'; xc.fillRect(0, 0, 760, 666);
+    for (var i = 0; i < 70; i++) { var x = Math.random() * 760, y = Math.random() * 666, r = 20 + Math.random() * 70, g = xc.createRadialGradient(x, y, 0, x, y, r), c = Math.random() < .5 ? '60,44,34' : '10,6,6';
+      g.addColorStop(0, 'rgba(' + c + ',.6)'); g.addColorStop(1, 'rgba(' + c + ',0)'); xc.fillStyle = g; xc.fillRect(x - r, y - r, r * 2, r * 2); }
+    xc.globalCompositeOperation = 'destination-in'; xc.drawImage(signImg, 0, 0, 760, 666); xc.globalCompositeOperation = 'destination-out'; sootFull = covered(); soot.style.opacity = 1; }
+  var probe = document.createElement('canvas'); probe.width = 76; probe.height = 67; var pxc = probe.getContext('2d');
+  function covered() { pxc.clearRect(0, 0, 76, 67); pxc.drawImage(soot, 0, 0, 76, 67); var d = pxc.getImageData(0, 0, 76, 67).data, n = 0; for (var i = 3; i < d.length; i += 4) if (d[i] > 60) n++; return n; }
+  var rubX = null, rubY = 0;
+  function rub(e) { if (!rubbing) return; if (rubX !== null) scrubV = Math.min(1, scrubV + Math.hypot(e.clientX - rubX, e.clientY - rubY) / 140); rubX = e.clientX; rubY = e.clientY; var r = soot.getBoundingClientRect(), x = (e.clientX - r.left) * 760 / r.width, y = (e.clientY - r.top) * 666 / r.height, g = xc.createRadialGradient(x, y, 0, x, y, 170);
+    g.addColorStop(0, 'rgba(0,0,0,.95)'); g.addColorStop(.55, 'rgba(0,0,0,.7)'); g.addColorStop(1, 'rgba(0,0,0,0)'); xc.fillStyle = g; xc.fillRect(x - 170, y - 170, 340, 340);
+    if (!cleanT) cleanT = setTimeout(function () { cleanT = 0; if (step === 'rub' && covered() < sootFull * .72) signClean(); }, 250); }
+  soot.addEventListener('pointerdown', function (e) { if (step !== 'rub') return; rubbing = true; try { soot.setPointerCapture(e.pointerId); } catch (x) {} rub(e); });
+  soot.addEventListener('pointermove', rub);
+  ['pointerup', 'pointercancel'].forEach(function (n) { soot.addEventListener(n, function () { rubbing = false; rubX = null; }); });
+
+  /* ---- embers over everything, and the distant oasis wobbling in the heat (each row of it nudged sideways) */
+  var em = $('embers'), ec = em.getContext('2d'), sparks = [], oc = oasis.getContext('2d'), oimg = new Image(), amp = 1, ampTo = 1; oimg.src = 'oasis.webp';
+  function spark(fresh) { return { x: Math.random(), y: fresh ? .55 + Math.random() * .5 : Math.random(), v: .02 + Math.random() * .035, r: .6 + Math.random() * 1.6, w: Math.random() * 6.28, life: 0 }; }
+  for (var i = 0; i < 42; i++) sparks.push(spark(false));
+  var last = 0;
+  (function frame(now) {
+    requestAnimationFrame(frame); var dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now;
+    if (wide.classList.contains('on')) { if (skyW) skyW(now); walkFrame(now); }
+    if (sshot.classList.contains('on') && skyS) skyS(now);
+    if (nshot.classList.contains('on') && skyN) skyN(now);
+    if (oasis.classList.contains('on') && oimg.complete) { oc.clearRect(0, 0, 420, 222); var s = now / 1000; amp += (ampTo - amp) * Math.min(1, dt * 3);
+      for (var y = 0; y < 222; y += 2) oc.drawImage(oimg, 0, y, 420, 2, amp * (Math.sin(y * .09 + s * 5) * 3 + Math.sin(y * .23 - s * 3.1) * 1.5), y + amp * Math.sin(s * 2 + y * .05), 420, 2); }
+    dustFrame(dt);
+    if (scrubG) { scrubV = rubbing && step === 'rub' ? scrubV * Math.pow(.02, dt) : 0; scrubG.gain.setTargetAtTime(soundOn ? scrubV * .35 * PREF.fx : 0, AC.currentTime, .03); }
+    fit(em); var W = em.width, H = em.height, k = W / 1920;
+    ec.clearRect(0, 0, W, H); ec.globalCompositeOperation = 'lighter';
+    sparks.forEach(function (p, i) { p.life += dt; p.y -= p.v * dt * (1 - gust * .5); p.w += dt * 1.7; p.x += (.012 + Math.sin(p.w) * .01 + gust * .09 + storm * .03) * dt;
+      if (p.y < -.02 || p.x > 1.02) sparks[i] = spark(true);
+      var a = Math.min(1, p.life / .8) * (.55 + .45 * Math.sin(p.w * 3)), x = p.x * W, yy = p.y * H, rr = p.r * k * 9;
+      var g = ec.createRadialGradient(x, yy, 0, x, yy, rr); g.addColorStop(0, 'rgba(255,214,140,' + a + ')'); g.addColorStop(.35, 'rgba(255,120,40,' + a * .6 + ')'); g.addColorStop(1, 'rgba(255,80,20,0)');
+      ec.fillStyle = g; ec.beginPath(); ec.arc(x, yy, rr, 0, 6.29); ec.fill(); });
+  })(0);
+
+  function push(cam, origin, scale) { cam.classList.add('out'); cam.style.transform = 'scale(1)'; cam.style.transformOrigin = origin; void cam.offsetWidth; cam.classList.remove('out'); cam.style.transform = 'scale(' + scale + ')'; }
+  function frameOn(cam, cx, cy, z, secs) { var tx = Math.min(0, Math.max(1 - z, .5 - z * cx)), ty = Math.min(0, Math.max(1 - z, .5 - z * cy));
+    cam.style.transition = 'transform ' + secs + 's cubic-bezier(.45,0,.25,1)'; cam.style.transformOrigin = '0 0'; cam.style.transform = 'translate(' + (tx * 100).toFixed(2) + '%,' + (ty * 100).toFixed(2) + '%) scale(' + z + ')'; }
+  function cut(to, fn) { show(dip, 1); later(function () { [wide, sshot, nshot].forEach(function (s) { s.classList.toggle('on', s === to); }); fn(); later(function () { show(dip, 0); }, 120); }, 480); }
+  var GREY = [skyw, prints, drop, walk];
+
+  /* 2.1 wide: days go by as Joe trudges in to the well */
+  function start() { run++; timers.forEach(clearTimeout); timers = []; clearInterval(typeT); clearInterval(fadeT); step = 'walk'; mvol = 1; levels(); audio(); amp = ampTo = 1;
+    cover.classList.add('off'); [bub, ring, tap, signbox, oasis, glow, walk, drop, shard, tunnel].forEach(function (e) { show(e, 0); }); shard.classList.remove('took'); signbox.classList.remove('rub'); oasis.classList.remove('focus'); glow.classList.remove('focus');
+    GREY.forEach(function (e) { e.classList.remove('grey'); }); nxOff(); txt.textContent = ''; speaker('Narrator'); prompt('');
+    melt.classList.remove('melt'); [wide, sshot, nshot].forEach(function (s) { s.classList.toggle('on', s === wide); }); push(camw, '50% 50%', 1); camn.style.transition = 'none'; camn.style.transform = '';
+    pc.clearRect(0, 0, prints.width, prints.height); fi = 0; lastPrint = -1; storm = stormTo = .25;
+    [walk, drop].forEach(function (v) { v.pause(); v.playbackRate = 1; try { v.currentTime = 0; } catch (e) {} });
+    var p = bgv.play(); if (p && p.catch) p.catch(function () {});
+    if (soundOn) { if (music.paused) { try { music.currentTime = 0; } catch (e) {} }   /* (already playing: from the scene before, in the one flow) */ var q = music.play(); if (q && q.catch) q.catch(function () {}); }
+    later(function () { type('Narrator', N1, 's2-01-narrator'); nxOn(8900); }, 700);
+    later(function () { show(walk, 1); play(walk); }, 1200); }
+  walk.addEventListener('ended', function () { if (step !== 'walk') return; step = 'walked'; later(signShot, 400); });
+
+  /* 2.2 close: the signpost, the storm at its darkest; tap it and the sign swings down under soot; rub it clean to read it */
+  function signShot() { step = 'sign'; stormTo = .75; cut(sshot, function () { bgv.pause(); show(walk, 0); push(cams, '62% 50%', 1.06); txt.textContent = ''; speaker('Joe'); });
+    later(function () { think('Joe', 'Could this really all have been Trogdor?', .31, .27, 's2-02-joe'); nxOn(0); }, 1300);
+    later(function () { if (step === 'sign') signDown(); }, 2600); }
+  function signDown() { show(ring, 0); step = 'rub'; sootUp(); show(signbox, 1); signbox.classList.add('rub'); prompt('Rub the soot off the sign ↗'); }
+  function signClean() { step = 'reading'; signbox.classList.remove('rub'); soot.style.opacity = 0; prompt(''); nxOn(3600); later(nestShot, 3600); }
+
+  /* 2.3 close: the nest, empty; tap it, look closer, and pick up the eggshell */
+  function nestShot() { if (['sign', 'rub', 'reading'].indexOf(step) < 0) return; step = 'nest'; stormTo = 1; nxOn(0); show(ring, 0); prompt(''); show(bub, 0); show(signbox, 0); signbox.classList.remove('rub');
+    cut(nshot, function () { push(camn, '72% 62%', 1.07); });
+    later(function () { think('Joe', 'A dragon’s nest...and the eggs are gone.', .61, .27, 's2-03-joe'); }, 1300);
+    later(function () { if (step === 'nest') { ringAt(.79, .69, 9); prompt('Tap the nest ↑'); } }, 3200); }
+  function nestClose() { step = 'shard'; show(ring, 0); show(bub, 0); prompt(''); stormTo = .6; frameOn(camn, .79, .68, 2.1, 1.6);
+    later(function () { show(shard, 1); }, 1400);
+    later(function () { if (step === 'shard') { ringAt(.557, .52, 10); prompt('Something glints in the ash. Tap it'); } }, 2200); }
+  function takeShard() { step = 'took'; show(ring, 0); prompt(''); shard.classList.add('took'); later(chime, 950); type('Joe', 'A piece of eggshell...still warm.', 's2-03b-joe'); nxOn(4600);
+    try { if (window.jjScore && window.jjScore.award) window.jjScore.award('st2-eggshell'); } catch (e) {}
+    later(function () { prompt('Joe keeps the shard. It might matter later.'); }, 1600);
+    later(kneel, 4600); }
+
+  /* 2.4 wide: his legs give way (slow, the colour draining, his sight closing in, his heart pounding); the oasis is the only colour left; tap it to focus */
+  function kneel() { if (['nest', 'shard', 'took'].indexOf(step) < 0) return; step = 'kneel'; stormTo = .4; nxOff(); show(ring, 0); prompt(''); show(bub, 0);
+    cut(wide, function () { var p = bgv.play(); if (p && p.catch) p.catch(function () {}); try { drop.currentTime = 0; } catch (e) {} show(drop, 1); push(camw, '50% 50%', 1); txt.textContent = ''; speaker('Narrator'); });
+    later(function () { play(drop); }, 900);
+    later(function () { drop.playbackRate = .5; GREY.forEach(function (e) { e.classList.add('grey'); }); show(tunnel, 1); heartbeat(5); }, 1700);
+    later(function () { drop.playbackRate = 1; }, 3500);
+    later(function () { type('Narrator', N2, 's2-04-narrator'); }, 2600);
+    later(function () { show(oasis, 1); show(glow, 1); push(camw, '93% 45%', 1.18); fadeMusic(2500); if (window.jjKit && jjKit.lead) jjKit.lead(jjKit.base + 'story2-music-oasis.mp3', OASIS_IN); }, 4200);   /* the oasis music comes in as he sights it, as the tale's: Scene 3 takes it over */
+    later(function () { if (step === 'kneel') { step = 'focus'; ringAt(.945, .445, 8); prompt('Tap the shimmer to focus his eyes'); nxOn(0); } }, 7600); }
+  function focus() { step = 'focused'; show(ring, 0); prompt(''); nxOff(); ampTo = 0; oasis.classList.add('focus'); glow.classList.add('focus');
+    GREY.forEach(function (e) { e.classList.remove('grey'); }); show(tunnel, 0);
+    later(function () { type('Narrator', N3, 's2-05-narrator'); nxOn(5000); }, 600);
+    later(function () { ampTo = 1.6; oasis.classList.remove('focus'); }, 2600);
+    later(function () { melt.classList.add('melt'); stormTo = 0; }, 5600);
+    later(end, 7300); }
+  function end() { if (window.jjKit && jjKit.flow) { nxOff && nxOff(); jjKit.done(); return; }   /* the one flow: no end card, the next scene follows */
+    step = 'end'; show(drop, 0); show(oasis, 0); show(glow, 0); speaker('Narrator'); txt.textContent = 'End of Scene 2. Next: Scene 3, the dragon oasis.'; go.querySelector('span').textContent = 'Play again'; $('next3').hidden = false; cover.classList.remove('off'); }
+
+  ring.addEventListener('click', function () { if (!ring.classList.contains('on')) return;
+    if (step === 'sign') signDown(); else if (step === 'nest') nestClose(); else if (step === 'shard') takeShard(); else if (step === 'focus') focus(); });
+  function next() { if (!gate()) return;
+    if (step === 'walk') { step = 'walked'; clearInterval(typeT); walk.pause(); signShot(); }
+    else if (step === 'sign' || step === 'rub' || step === 'reading') nestShot(); else if (step === 'nest' || step === 'shard' || step === 'took') kneel(); else if (step === 'focus') focus();
+    else if (step === 'focused') { step = 'ending'; nxOff(); melt.classList.add('melt'); stormTo = 0; later(end, 1700); } }
+  cap.addEventListener('click', next);
+  addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'Enter') next(); });
+
+  go.addEventListener('click', start);
+  speaker('Narrator');
+})();
+</script>
+</body>
+</html>

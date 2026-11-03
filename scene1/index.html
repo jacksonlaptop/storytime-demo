@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Storytime 2 · Scene 1</title>
+<meta name="description" content="Storytime 2, Scene 1 in the painted style: the portal wasteland, Joe's arrival and Grik.">
+<style>
+/* Storytime 2 · Scene 1 in the painted style (Joe, 22 Oct: 'put these two together for a demo with the UI, and the speech design we did the other day').
+   C1 (Joe is thrown out of the portal) and C2 (the portal sputters, Grik arrives) from Dreamina, joined on the painted plates; the waits hold the plate with
+   ash drifting in code; Grik talks as a cut-out of himself (plate C minus plate B), bobbing; the dialogue box takes the speaker's colours and portrait. */
+@font-face{font-family:"Joes Journey Headline";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532594d_Joes%20Journey%20Headline.otf") format("opentype");font-display:swap;}
+:root{--ink:#3a2a12;--paper:#f3e2ba;--pink:#FF00F5;--bg:#04060b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font-family:"Joes Journey Headline",sans-serif;}
+body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidden;}
+.top{display:flex;justify-content:center;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 16px 6px;font-size:15px;opacity:.8;}
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+.pw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size;}
+.pane{position:relative;flex:none;width:min(100cqw,calc(100cqh * 16 / 9));aspect-ratio:16/9;overflow:hidden;background:var(--bg);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);mask-composite:intersect;}
+.pane img.plate,.pane video,.pane canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
+.pane .on{opacity:1!important;}
+/* the camera: the painting and the two cut-outs move together (a slow push-in through the conversation) */
+.cam{position:absolute;inset:0;transform-origin:0 0;transition:transform 1.3s cubic-bezier(.45,0,.25,1);}
+.cam.out{transition:transform .8s ease;}
+#joe{position:absolute;left:30.94%;top:26.56%;width:17.62%;opacity:0;transition:opacity .4s ease;transform-origin:50% 96%;will-change:transform;z-index:2;}
+#grik{position:absolute;left:52.75%;top:31.44%;width:12.81%;opacity:0;transition:opacity .4s ease;will-change:transform;z-index:3;}
+.sm{position:absolute;top:10px;right:10px;z-index:20;font-size:13px;}
+.snd{display:flex;align-items:center;gap:7px;font:inherit;color:#fff;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px 5px 9px;cursor:pointer;margin-left:auto;transition:background .2s ease;}
+.snd:hover{background:rgba(255,255,255,.18);}.snd:active{background:#ff00f5;}
+.snd svg{width:16px;height:16px;display:block;}.snd .x{display:none;}.sm.mute .snd .w{display:none;}.sm.mute .snd .x{display:inline;}
+.bub{position:absolute;z-index:6;max-width:44%;display:grid;grid-template-columns:auto minmax(0,max-content);column-gap:9px;align-items:center;padding:7px 14px 7px 7px;border-radius:14px;border:1px solid rgba(255,255,255,.5);background:rgba(14,18,30,.9);transform:translateY(calc(-100% - 16px));
+  font-size:clamp(11px,2.4vw,18px);line-height:1.25;opacity:0;translate:0 6px;transition:opacity .35s ease,translate .35s ease;pointer-events:none;}
+.bub.on{opacity:1;translate:0 0;}
+.bub .bface{grid-column:1;grid-row:1 / span 2;width:2.6em;height:2.6em;border-radius:50%;border:2px solid var(--who,#1f4fa0);background:center/cover no-repeat;}
+.bub b{grid-column:2;align-self:end;font-weight:normal;font-size:.75em;opacity:.7;}
+.bub span{grid-column:2;align-self:start;font-style:italic;}
+/* a thought: small round puffs instead of a pointed tail */
+.bub::before,.bub::after{content:"";position:absolute;border-radius:50%;background:rgba(14,18,30,.9);border:1px solid rgba(255,255,255,.5);}
+.bub::before{left:16px;bottom:-12px;width:12px;height:12px;}.bub::after{left:10px;bottom:-21px;width:7px;height:7px;}
+.ring{position:absolute;z-index:7;width:max(48px,12%);aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid rgba(255,230,140,.95);box-shadow:0 0 14px rgba(255,214,90,.8),inset 0 0 12px rgba(255,214,90,.5);
+  background:radial-gradient(closest-side,rgba(255,240,180,.25),rgba(255,240,180,0));opacity:0;pointer-events:none;cursor:pointer;transition:opacity .4s ease;animation:pulse 1.6s ease-in-out infinite;left:66%;top:40%;}
+.ring.on{opacity:1;pointer-events:auto;}
+@keyframes pulse{50%{scale:1.12;}}
+.cover{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(4,6,11,.45);border:0;font:inherit;color:#fff;cursor:pointer;transition:opacity .4s ease;}
+.cover span{font-size:18px;padding:10px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.cover button,.cover a{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer;text-decoration:none;}
+.cover a[hidden]{display:none;}
+.cover.off{opacity:0;pointer-events:none;}
+.cap{position:relative;width:min(92vw,720px);margin:calc(var(--fs) / 2) auto 0;--fs:clamp(62px,17vw,90px);padding:calc(var(--fs) / 2 + 8px) 20px 18px;border-radius:16px;background:var(--paper);background:color-mix(in srgb,var(--paper) 84%,var(--who,#6b4a1e));color:var(--ink);transition:background .35s ease,box-shadow .35s ease;
+  box-shadow:0 0 0 4px var(--who,#6b4a1e),0 0 0 6px rgba(0,0,0,.55),0 0 30px color-mix(in srgb,var(--who,#6b4a1e) 60%,transparent),0 8px 28px rgba(0,0,0,.6);font-size:clamp(15px,4.2vw,21px);line-height:1.3;cursor:pointer;}
+.cap .face{position:absolute;left:16px;top:0;translate:0 -50%;width:var(--fs);aspect-ratio:1;z-index:3;border-radius:50%;border:4px solid var(--who,#6b4a1e);background:#e9d6a8 center/cover no-repeat;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:border-color .3s ease;}
+.cap .who{position:absolute;z-index:3;top:0;left:calc(16px + var(--fs) - 4px);translate:0 -50%;padding:4px 14px 5px;border-radius:999px;background:var(--who,#6b4a1e);color:#fff;font-size:.82em;line-height:1.2;box-shadow:0 0 0 2px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.35);transition:background .35s ease;white-space:nowrap;}
+.cap .txt{white-space:pre-wrap;}
+.cap .txt.alien{font-family:"Joes Journey Hieroglyphics","Joes Journey Headline",sans-serif;letter-spacing:.06em;}
+.cap .tap{margin-top:10px;color:#7a2f9a;opacity:0;transition:opacity .4s ease;}
+.cap .tap.on{opacity:1;}
+.cap .nx{position:absolute;right:16px;bottom:10px;display:flex;align-items:center;gap:7px;font-size:.72em;color:color-mix(in srgb,var(--who,#6b4a1e) 65%,#000);opacity:0;transition:opacity .3s ease;pointer-events:none;}
+/* Next, as in Pokemon and Animal Crossing: a bobbing arrow at the bottom-right of the box once the line is fully typed, with the progress line
+   (how long until it moves on by itself) running into it; a line that waits for you has its line full, gently glowing */
+.cap .nx.on{opacity:1;}
+.cap .nx .pg{width:72px;height:3px;border-radius:3px;overflow:hidden;background:color-mix(in srgb,var(--who,#6b4a1e) 22%,transparent);}
+.cap .nx .pg b{display:block;height:100%;background:var(--who,#6b4a1e);transform-origin:0 50%;transform:scaleX(0);}
+.cap .nx.wait .pg b{animation:nxglow 1.6s ease-in-out infinite;}
+.cap .nx .arw{width:12px;height:8px;fill:currentColor;animation:nxbob .9s ease-in-out infinite;}
+@keyframes nxbob{50%{transform:translateY(3px);}}
+@keyframes nxglow{50%{opacity:.45;}}
+/* the player's reply: two choices in the box */
+.cap .ch{display:none;gap:10px;flex-wrap:wrap;margin-top:2px;}
+.cap .ch.on{display:flex;}
+.cap .ch button{font:inherit;font-size:.9em;color:#fff;background:var(--who,#1f4fa0);border:2px solid rgba(255,255,255,.5);border-radius:999px;padding:7px 16px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:filter .2s ease,transform .2s ease;}
+.cap .ch button:hover{filter:brightness(1.15);transform:translateY(-1px);}.cap .ch button:active{background:var(--pink);}
+/* Grik's poses: one per line, crossfading; they share the bob */
+#gp{position:absolute;inset:0;z-index:3;pointer-events:none;will-change:transform;}
+#gp img{position:absolute;opacity:0;scale:.94;transition:opacity .25s ease,scale .35s cubic-bezier(.3,1.6,.5,1);}
+#gp img.on{opacity:1;scale:1;}
+/* cutaways: a hazy castle far off in the east; the fire as a memory in an oval */
+#castle{position:absolute;left:82%;top:3%;width:16%;opacity:0;filter:blur(1px) saturate(1.2);transition:opacity 1.6s ease;}
+#castle.on{opacity:.8;}
+#dim{position:absolute;inset:0;z-index:7;background:radial-gradient(ellipse at 50% 50%,rgba(20,10,4,.55),rgba(4,3,2,.9));opacity:0;transition:opacity .6s ease;pointer-events:none;}
+#mem{position:absolute;left:10%;top:6%;width:80%;height:88%;object-fit:cover;z-index:8;opacity:0;transition:opacity .6s ease;pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse closest-side,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse closest-side,#000 62%,transparent 100%);filter:sepia(.25);}
+#dim.on,#mem.on{opacity:1!important;}
+@media (orientation:landscape) and (max-height:560px){
+  .top{display:none;}.stage{padding:0;gap:0;position:relative;}.pw{height:100%;}
+  .cap{position:absolute;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));translate:-50% 0;width:min(78vw,640px);margin:0;--fs:48px;padding:calc(var(--fs) / 2 + 4px) 14px 10px;font-size:14px;z-index:15;}
+  .cap .face{border-width:2px;}.cap .tap{margin-top:4px;}
+}
+</style>
+<style>@font-face{font-family:"Joes Journey Hieroglyphics";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532592f_Joes%20Journey%20Hieroglyphics.otf") format("opentype");font-display:swap;}</style>
+<link rel="stylesheet" href="../kit.css?v=6">
+<script src="../kit.js?v=6"></script>
+</head>
+<body>
+<div class="top">Storytime 2 · Scene 1 · painted test</div>
+<div class="stage">
+  <div class="pw"><div class="pane" id="pane">
+    <div class="cam" id="cam"><img class="plate on" id="pa" src="plate-a.jpg" alt=""><img class="plate" id="pb" src="plate-b.jpg" alt=""><canvas id="skyp"></canvas><img id="joe" src="joe.png" alt=""><img id="grik" src="grik.png" alt=""><img id="castle" src="castle-haze.webp" alt=""><div id="gp"></div></div>
+    <video id="c1" src="c1.mp4" muted playsinline preload="auto"></video><video id="c2" src="c2.mp4" muted playsinline preload="auto"></video><video id="c3" src="c3.mp4" muted playsinline preload="auto"></video><canvas id="skyc"></canvas>
+    <canvas id="ash"></canvas><div id="dim"></div><video id="mem" src="memory.mp4" muted playsinline preload="auto"></video>
+    <div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div>
+    <div class="ring" id="ring" role="button" aria-label="Tap the portal"></div>
+    <div class="cover" id="cover"><button id="go"><span>Play scene 1</span></button><a id="next2" href="../scene2/?v=8" hidden><span>Scene 2 ›</span></a></div>
+    <div class="sm" id="sm"><button class="snd" id="snd" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="x" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Sound</button>
+    </div>
+  </div></div>
+  <div class="cap" id="cap"><div class="face" id="face"></div><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="ch" id="ch"><button data-c="0">I came through that portal.</button><button data-c="1">What happened here?</button></div><div class="tap" id="tap">Tap the portal ↑</div><div class="nx" id="nx"><i class="pg"><b></b></i>Next<svg class="arw" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1h10L6 7z"/></svg></div></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var c1 = $('c1'), c2 = $('c2'), c3 = $('c3'), pa = $('pa'), pb = $('pb'), joe = $('joe'), grik = $('grik'), cam = $('cam'), ash = $('ash'), bub = $('bub'), ring = $('ring'), cover = $('cover'),
+      cap = $('cap'), face = $('face'), who = $('who'), txt = $('txt'), tap = $('tap'), nx = $('nx'), snd = $('snd'), ch = $('ch'), gp = $('gp'), castle = $('castle'), dim = $('dim'), mem = $('mem');
+  var BOOK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#e9d6a8"/><path d="M10 20c8-3 15-2 22 3v25c-7-5-14-6-22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/><path d="M54 20c-8-3-15-2-22 3v25c7-5 14-6 22-3z" fill="#fff8e6" stroke="#6b4a1e" stroke-width="2.5" stroke-linejoin="round"/></svg>');
+  var WHO = { Narrator: ['#6b4a1e', BOOK], Joe: ['#1f4fa0', 'face-joe.jpg'], Grik: ['#2a8a76', 'face-grik.jpg'] };
+  var run = 0, timers = [], typeT = 0, speaking = null;
+  function later(fn, ms) { var r = run; timers.push(setTimeout(function () { if (r === run) fn(); }, ms)); }
+  function show(el, on) { el.classList.toggle('on', !!on); }
+  function play(v) { try { v.currentTime = 0; } catch (e) {} var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+
+  /* ---- sound: the wasteland music under everything, a few effects on the picture's beats, and a voice for each speaker as the text types (Joe, 25 Oct:
+     'without sound it's going to be weird'). Off with ?mute=1 or the switch. */
+  /* sound preferences: all on/off plus a level each for music, effects and voices; kept in this browser (?mute=1 starts muted and saves nothing) */
+  var TEST = /[?&]mute=1/.test(location.search), PREF = { on: true, music: .8, fx: .8, voice: 1 };
+  try { var sv = JSON.parse(localStorage.getItem('jjSound') || 'null'); if (sv) for (var k in PREF) if (k in sv) PREF[k] = sv[k]; } catch (e) {}
+  if (TEST) PREF.on = false;
+  function savePref() { if (TEST) return; try { localStorage.setItem('jjSound', JSON.stringify(PREF)); } catch (e) {} }
+  /* the local preview (site proxy) starts every page muted (jjUserMuted); here, as with the site's moon, this page's own sound button turns it on */
+  var HELD = false; try { HELD = sessionStorage.getItem('jjUserMuted') === '1'; } catch (e) {}
+  var soundOn = PREF.on && !HELD, AC = null, music = window.jjKit ? jjKit.music('music.mp3') : new Audio('music.mp3'); music.loop = true;
+  var SFX = {}; ['flare', 'thud', 'sputter', 'whoosh', 'memory'].forEach(function (n) { SFX[n] = new Audio('sfx-' + n + '.mp3'); });
+  function sfx(n, v) { if (!soundOn) return; var a = SFX[n].cloneNode(); a.volume = Math.min(1, (v || .5) * PREF.fx); if (!a.volume) return; var p = a.play(); if (p && p.catch) p.catch(function () {}); }
+  var voNow = null;
+  function vo(id, cb) { if (voNow) { voNow.pause(); voNow = null; } if (!id || !soundOn) return; var a = new Audio('vo/' + id + '.mp3'); a.volume = PREF.voice;
+    a.addEventListener('loadedmetadata', function () { if (a !== voNow) return; voNow.ok = 1; if (cb) cb(a.duration); });
+    a.addEventListener('error', function () { if (a === voNow) voNow = null; }); voNow = a; var p = a.play(); if (p && p.catch) p.catch(function () {}); }
+  function voice(n, ch) { if (voNow || !soundOn || !AC || !PREF.voice || /[\s.,!?'’…-]/.test(ch) || n === 'Narrator') return;   // a babble blip per letter: Grik high and buzzy, Joe low and soft
+    var o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime, hi = n === 'Grik';
+    o.type = hi ? 'square' : 'triangle'; o.frequency.value = hi ? 520 + Math.random() * 260 : 190 + Math.random() * 90;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime((hi ? .035 : .06) * PREF.voice, t + .008); g.gain.exponentialRampToValueAtTime(.0005, t + (hi ? .05 : .07));
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .08); }
+  var sm = $('sm');
+  function levels() { music.volume = .4 * PREF.music; if (voNow) voNow.volume = PREF.voice; }
+  function setSound(on) { if (on && HELD) { HELD = false; try { sessionStorage.setItem('jjUserMuted', '0'); } catch (e) {} music.muted = false; }
+    soundOn = PREF.on = on; sm.classList.toggle('mute', !on); snd.setAttribute('aria-pressed', !on); snd.lastChild.textContent = on ? 'Mute' : 'Sound on'; levels(); if (!on) { music.pause(); if (voNow) { voNow.pause(); voNow = null; } } else if (cover.classList.contains('off')) { var p = music.play(); if (p && p.catch) p.catch(function () {}); } }
+  snd.addEventListener('click', function () { setSound(!soundOn); savePref(); });   /* one press: all sound off (the site's moon keeps the mixer; Joe, 25 Oct) */
+  setSound(soundOn);
+
+  function speaker(n) { var w = WHO[n] || WHO.Narrator; cap.style.setProperty('--who', w[0]); face.style.backgroundImage = 'url("' + w[1] + '")'; who.textContent = n; }
+  function type(n, s, alien, id, join) { vo(id); clearInterval(typeT); speaker(n); speaking = n; txt.classList.toggle('alien', !!alien); var pre = join ? full + ' ' : ''; txt.textContent = pre; var i = 0; full = pre + s; typing = true; lineAt = performance.now(); nx.classList.remove('on');
+    typeT = setInterval(function () { var ch = s.charAt(i); i++; txt.textContent = pre + s.slice(0, i); if (i % 2) voice(n, ch); if (i >= s.length) { clearInterval(typeT); speaking = null; typing = false; nxReady(); } }, alien ? 26 : 34); }
+
+  /* Next: shown only once the line is fully typed and at least a second after it appeared; a press while it types finishes the line instead of skipping it,
+     and a press in that first second does nothing (Joe, 30 Oct: a press meant for one line skipped the next) */
+  var nxB = nx.querySelector('.pg b'), nxA = null, nxT = 0, nxWant = false, typing = false, full = '', lineAt = 0;
+  function nxReady() { clearTimeout(nxT); nxT = setTimeout(function () { if (nxWant && !typing) nx.classList.add('on'); }, Math.max(0, 1000 - (performance.now() - lineAt))); }
+  function nxOn(ms) { nxWant = true; if (nxA) { nxA.cancel(); nxA = null; } nx.classList.toggle('wait', !ms);
+    if (ms && nxB.animate) { nxB.style.transform = ''; nxA = nxB.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: ms, easing: 'linear', fill: 'forwards' }); } else nxB.style.transform = 'scaleX(1)'; nxReady(); }
+  function nxOff() { nxWant = false; clearTimeout(nxT); if (nxA) { nxA.cancel(); nxA = null; } nx.classList.remove('on'); }
+  function finishType() { clearInterval(typeT); txt.textContent = full; typing = false; speaking = null; nxReady(); }
+  function gate() { if (performance.now() - lineAt < 1000) return false; if (typing) { finishType(); return false; } return true; }
+  function think(n, s, x, y, secs, id) { vo(id); lineAt = performance.now(); var w = WHO[n]; bub.style.setProperty('--who', w[0]); bub.querySelector('.bface').style.backgroundImage = 'url("' + w[1] + '")';
+    bub.querySelector('b').textContent = n + ', thinking'; bub.querySelector('span').textContent = s; bub.style.left = 'calc(' + x * 100 + '% - 24px)'; bub.style.top = y * 100 + '%'; show(bub, 1); later(function () { show(bub, 0); }, secs * 1000); }
+
+  /* the dialogue box keeps one size: as tall as its longest line at this width */
+  var ALL = [['Narrator', 'Joe landed with a thud. Everything looked different, like a painting come to life...and the enchanted forest was gone, only ash remained.'], ['Grik', 'A great fire. Some say a winged monster started it. Don’t believe all you hear.'], ['Grik', 'Through that old thing? It hasn’t worked in years. Not even a hello? Kids these days. I’m Grik.']];
+  function fitCap() { var a = who.textContent, b = txt.textContent, m = 0; cap.style.height = 'auto'; tap.style.display = 'block'; ch.classList.add('on');
+    ALL.forEach(function (l) { who.textContent = l[0]; txt.textContent = l[1]; m = Math.max(m, cap.offsetHeight); }); who.textContent = a; txt.textContent = b; ch.classList.remove('on'); cap.style.height = m + 'px'; }
+  fitCap(); addEventListener('resize', fitCap); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCap);
+
+  /* the sky turns, as in Scene 2: each picture drawn through a flow map round its painted spirals; a mask (sky-mask.png, from plate A)
+     keeps the arch, the trees and everything below the hills still. One canvas over the plates (inside the camera), one over the clips. */
+  var SWIRL = 3, SPIRALS = [.19, .07, .10, 1, .38, .09, .11, -1, .16, .19, .06, -1, .30, .02, .06, 1];
+  var SFS = 'precision mediump float;varying vec2 uv;uniform sampler2D tex,msk;uniform float t,k;uniform vec4 S[4];' +
+    'vec2 spin(vec2 q,vec4 s){vec2 d=q-s.xy;d.y*=.5625;float r=length(d);float f=smoothstep(s.z,s.z*.15,r);return s.w*f*vec2(-d.y,d.x)/max(r,.02)*.5;}' +
+    'void main(){vec2 fl=spin(uv,S[0])+spin(uv,S[1])+spin(uv,S[2])+spin(uv,S[3])+vec2(.12,-.04);fl*=texture2D(msk,uv).r*k*.035;' +
+    'float P=3.2;float a=fract(t/P),b=fract(t/P+.5);gl_FragColor=mix(texture2D(tex,uv-fl*a),texture2D(tex,uv-fl*b),abs(1.-2.*a));}';
+  var SVS = 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
+  var maskImg = new Image(); maskImg.src = 'sky-mask.png';
+  function Sky(canvas) {
+    var gl = canvas.getContext('webgl'); if (!gl) return null;
+    function sh(type, x) { var o = gl.createShader(type); gl.shaderSource(o, x); gl.compileShader(o); return o; }
+    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, SVS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, SFS)); gl.linkProgram(pr); gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    function tx(unit) { var o = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, o);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); return o; }
+    tx(1); tx(0); gl.uniform1i(gl.getUniformLocation(pr, 'tex'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'msk'), 1);
+    gl.uniform4fv(gl.getUniformLocation(pr, 'S'), SPIRALS);
+    var uT = gl.getUniformLocation(pr, 't'), uK = gl.getUniformLocation(pr, 'k'), maskIn = false, cur = null, fresh = true;
+    return function draw(now, src) {
+      var d = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(canvas.offsetWidth * d), h = Math.round(canvas.offsetHeight * d);
+      if (!w || !src) return; if (canvas.width !== w) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+      if (!maskIn) { if (!maskImg.complete || !maskImg.naturalWidth) return; gl.activeTexture(gl.TEXTURE1); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, maskImg); gl.activeTexture(gl.TEXTURE0); maskIn = true; }
+      var vid = src.tagName === 'VIDEO';
+      if (src !== cur) { cur = src; fresh = true; if (vid && src.requestVideoFrameCallback && !src._rvfc) { src._rvfc = 1; (function tick() { src.requestVideoFrameCallback(function () { if (cur === src) fresh = true; tick(); }); })(); } }
+      if (vid) { if (src.readyState < 2) return; if (fresh || !src.requestVideoFrameCallback) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); fresh = false; } }
+      else if (fresh) { if (!src.complete || !src.naturalWidth) return; gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); fresh = false; }
+      gl.uniform1f(uT, now / 1000); gl.uniform1f(uK, SWIRL); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+  }
+  var skyp = $('skyp'), skyc = $('skyc'), drawP = Sky(skyp), drawC = Sky(skyc);
+  function skyFrame(now) {
+    var plate = pb.classList.contains('on') ? pb : pa.classList.contains('on') ? pa : null, clip = [c3, c2, c1].filter(function (v) { return v.classList.contains('on'); })[0] || null;
+    show(skyp, !!plate && !!drawP); show(skyc, !!clip && !!drawC);
+    if (plate && drawP) drawP(now, plate); if (clip && drawC) drawC(now, clip); }
+
+  /* ash, and the two of them alive while they talk: Joe breathes and leans in to listen, nods a little when he speaks; Grik bobs, livelier when he talks */
+  var ax = ash.getContext('2d'), F = [], t0 = 0;
+  for (var i = 0; i < 70; i++) F.push({ x: Math.random(), y: Math.random(), r: .0008 + Math.random() * .0016, v: .012 + Math.random() * .02, ph: Math.random() * 6.3, sw: .006 + Math.random() * .012, a: .25 + Math.random() * .45 });
+  var lean = 0;
+  (function step(now) { requestAnimationFrame(step); var dt = t0 ? Math.min(.05, (now - t0) / 1000) : 0; t0 = now; var W = ash.clientWidth, H = ash.clientHeight, d = Math.min(2, devicePixelRatio || 1); var s = now / 1000;
+    if (W) { if (ash.width !== Math.round(W * d)) { ash.width = Math.round(W * d); ash.height = Math.round(H * d); } ax.setTransform(d, 0, 0, d, 0, 0); ax.clearRect(0, 0, W, H);
+      F.forEach(function (f) { f.y += f.v * dt; f.ph += dt * .8; if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); } var px = (f.x + Math.sin(f.ph) * f.sw) * W, py = f.y * H, r = Math.max(.7, f.r * W);
+        ax.fillStyle = 'rgba(205,200,210,' + f.a + ')'; ax.beginPath(); ax.arc(px, py, r, 0, 6.283); ax.fill(); }); }
+    skyFrame(now);
+    var target = speaking === 'Grik' ? .7 : speaking === 'Joe' ? -.2 : .25; lean += (target - lean) * Math.min(1, dt * 2.5);
+    if (joe.classList.contains('on')) { var nod = speaking === 'Joe' ? Math.sin(s * 7) * .5 : 0;
+      joe.style.transform = 'rotate(' + (lean + nod).toFixed(2) + 'deg) scaleY(' + (1 + Math.sin(s * 1.9) * .006).toFixed(4) + ')'; }
+    if (grik.classList.contains('on') || gp.classList.contains('on')) { var k = speaking === 'Grik' ? 1.15 : .5, tf = 'translateY(' + (Math.sin(s * 2.6) * 6 * k).toFixed(1) + 'px) rotate(' + (Math.sin(s * 1.7) * 2.5 * k).toFixed(2) + 'deg)'; grik.style.transform = tf; gp.style.transform = tf; } })(0);
+
+  /* the camera: a framing per beat, so the talk is not one held shot (Joe, 28 Oct: 'it all feels the same').
+     shot(x, y, zoom) centres that point of the painting; the edges never come into view. */
+  var SHOTS = { wide: [.5, .5, 1.07], grik: [.58, .44, 1.45], joe: [.40, .47, 1.4], east: [.86, .2, 1.55], full: [.5, .5, 1] };
+  function shot(n, secs) { var v = SHOTS[n], z = v[2], tx = Math.min(0, Math.max(1 - z, .5 - z * v[0])), ty = Math.min(0, Math.max(1 - z, .5 - z * v[1]));
+    cam.style.transitionDuration = (secs || 1.3) + 's'; cam.style.transform = 'translate(' + (tx * 100).toFixed(2) + '%,' + (ty * 100).toFixed(2) + '%) scale(' + z + ')'; }
+
+  /* Grik's poses (from the painted pose sheets): each one placed so its hat brim sits where the plate's Grik wears his */
+  var POSES = { hand: [507, 567, .51, .26], cross: [445, 561, .59, .26], thumb: [509, 565, .54, .28], shrug: [490, 559, .54, .26], point: [550, 555, .51, .28], wave: [499, 547, .53, .27] };
+  Object.keys(POSES).forEach(function (n) { var p = POSES[n], w = p[0] * .4 / 1600, h = p[1] * .4 / 900, im = new Image(); im.src = 'grik-' + n + '.webp'; im.alt = ''; im.dataset.p = n;
+    im.style.width = (w * 100) + '%'; im.style.left = ((.583 - p[2] * w) * 100) + '%'; im.style.top = ((.375 - p[3] * h) * 100) + '%'; gp.appendChild(im); });
+  function pose(n) { var plate = n === 'plate'; show(grik, plate); show(gp, !plate); [].forEach.call(gp.children, function (im) { show(im, im.dataset.p === n); }); }
+
+  function memory() { show(dim, 1); show(mem, 1); play(mem); sfx('memory', .9); music.volume = .15 * PREF.music; }
+  mem.addEventListener('ended', function () { show(mem, 0); show(dim, 0); levels(); });
+
+  /* the conversation: who, text, voice id, Grik's pose, the framing, and extras (alien text, a fixed time, the player's choice, cues part-way through a line) */
+  var LINES = [
+    { w: 'Grik', t: '⟟⏁ ⋏⟒⍜⍀ ⌇⌰⟟⏚?!', alien: 1, ms: 2600, id: 's1-04-grik', pose: 'plate', cam: 'grik' }, { ms: 900, cam: 'wide' },
+    { w: 'Grik', t: 'Ah. You’re not from around here, are you?', id: 's1-05-grik', pose: 'hand', cam: 'grik', choose: 1 },
+    { w: 'Grik', t: 'Not even a hello? Kids these days. I’m Grik.', join: 1, id: 's1-07-grik', pose: 'cross', cam: 'grik', cue: ['I’m Grik', function () { pose('thumb'); }] },
+    { w: 'Grik', t: 'A great fire. Some say a winged monster started it.', id: 's1-08-grik', pose: 'hand', cam: 'wide', ms: 7200, cue: ['A great', memory] },
+    { w: 'Grik', t: 'Don’t believe all you hear.', join: 1, id: 's1-08b-grik', pose: 'shrug', cam: 'grik' },
+    { w: 'Joe', t: 'Can the portal be fixed?', id: 's1-09-joe', cam: 'joe' },
+    { w: 'Grik', t: 'Hmm. Folk whisper of a wizard to the east.', id: 's1-10-grik', pose: 'point', cam: 'east', ms: 5200, cue: ['wizard', function () { show(castle, 1); }] },
+    { w: 'Grik', t: 'I don’t believe in whispers.', join: 1, id: 's1-10b-grik', pose: 'cross', cam: 'wide', cue: ['I', function () { show(castle, 0); }] },
+    { w: 'Grik', t: 'Anyway, stuff to do! See you around, buddy!', id: 's1-11-grik', pose: 'wave', cam: 'grik' }];
+  var REPLY = [{ w: 'Joe', t: 'I came through that portal.', id: 's1-06a-joe', cam: 'joe' }, { w: 'Joe', t: 'What happened here?', id: 's1-06b-joe', cam: 'joe' }];
+  // Grik answers whichever you picked before he carries on (Joe, 30 Oct: make the choice count)
+  var ANSWER = [{ w: 'Grik', t: 'Through that old thing? It hasn’t worked in years.', id: 's1-06c-grik', pose: 'shrug', cam: 'wide' },
+    { w: 'Grik', t: 'Straight to the gossip, eh?', id: 's1-06d-grik', pose: 'hand', cam: 'grik' }];
+  var li = -1, lineT = 0, choosing = false, asked = true, then = null;
+  function ask() { if (asked) return; asked = true; clearInterval(typeT); speaking = null; speaker('Joe'); txt.textContent = ''; choosing = true; show(ch, 1); }
+  function say(L, after) { clearTimeout(lineT);
+    if (L.cam) shot(L.cam); if (L.pose) pose(L.pose);
+    if (!L.w) { lineT = setTimeout(after, L.ms); return; }
+    type(L.w, L.t, L.alien, L.id, L.join); if (L.choose) nxOff(); else nxOn(L.ms || 1500 + L.t.length * 48);
+    if (L.cue) { var at = Math.max(0, L.t.indexOf(L.cue[0])); later(L.cue[1], at * 34); }
+    if (L.choose) { asked = false; later(ask, 1500 + L.t.length * 40); return; }
+    lineT = setTimeout(after, L.ms || 1500 + L.t.length * 48);
+    if (voNow) { var a = voNow; a.addEventListener('loadedmetadata', function () { if (voNow === a) { clearTimeout(lineT); lineT = setTimeout(after, Math.max(L.ms || 0, a.duration * 1000 + 700)); nxOn(Math.max(L.ms || 0, a.duration * 1000 + 700)); } }); } }
+  function nextLine() { if (choosing) return; if (!asked) { ask(); return; } if (then) { var L = then; then = null; say(L, nextLine); return; } li++; if (li >= LINES.length) { leave(); return; } say(LINES[li], nextLine); }
+  [].forEach.call(ch.children, function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); if (!choosing) return; choosing = false; show(ch, 0); then = ANSWER[+b.dataset.c]; say(REPLY[+b.dataset.c], nextLine); }); });
+  cap.addEventListener('click', function () { if (li >= 0 && li < LINES.length && !choosing && gate() && !mem.classList.contains('on')) nextLine(); });
+  addEventListener('keydown', function (e) { if (choosing && (e.key === '1' || e.key === '2')) { ch.children[+e.key - 1].click(); return; } if ((e.key === 'ArrowRight' || e.key === 'Enter') && li >= 0 && li < LINES.length && !choosing && gate() && !mem.classList.contains('on')) nextLine(); });
+
+  function talkIn() { show(pa, 1); show(pb, 0); show(joe, 1); pose('plate'); show(ash, 1); setTimeout(function () { show(c2, 0); }, 80);   // plate A under the two cut-outs, so they can move
+    shot('full', .01); nextLine(); }
+  function leave() { nxOff(); speaking = null; show(castle, 0); pose('plate'); shot('full', .8);
+    setTimeout(function () { show(c3, 1); play(c3); show(ash, 0); later(function () { sfx('whoosh', .55); }, 1500); setTimeout(function () { show(grik, 0); show(gp, 0); show(joe, 0); show(pa, 0); show(pb, 1); }, 150);
+      later(function () { type('Joe', 'Uh...I’m Joe.', 0, 's1-12-joe'); }, 2200); }, 850); }
+  c3.addEventListener('ended', function () { show(ash, 1); setTimeout(function () { show(c3, 0); }, 60); type('Narrator', 'But Grik was gone before Joe could get the words out.', 0, 's1-13-narrator'); later(end, 4200); });
+  function end() { if (window.jjKit && jjKit.flow) { nxOff && nxOff(); jjKit.done(); return; }   /* the one flow: no end card, the next scene follows */
+    nxOff(); speaker('Narrator'); txt.textContent = 'End of Scene 1. Next: Scene 2, the ash desert.'; cover.querySelector('span').textContent = 'Play again'; $('next2').hidden = false; later(function () { cover.classList.remove('off'); music.pause(); }, 1500); }
+
+  function start() { run++; timers.forEach(clearTimeout); timers = []; clearTimeout(lineT); li = -1; speaking = null; cover.classList.add('off'); show(bub, 0); show(ring, 0); show(tap, 0); show(grik, 0); show(joe, 0); show(ash, 0); nxOff();
+    choosing = false; asked = true; then = null; show(ch, 0); show(castle, 0); show(gp, 0); show(mem, 0); show(dim, 0); mem.pause(); shot('full', .01); show(pa, 1); show(pb, 0); show(c2, 0); show(c3, 0); txt.textContent = ''; speaker('Narrator');
+    if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    if (soundOn) { if (music.paused) { try { music.currentTime = 0; } catch (e) {} }   /* (already playing: from the scene before, in the one flow) */ var p = music.play(); if (p && p.catch) p.catch(function () {}); }
+    show(c1, 1); play(c1); later(function () { sfx('flare', .5); }, 1900); later(function () { sfx('thud', .6); }, 3300);
+    later(function () { type('Narrator', ALL[0][1], 0, 's1-01-narrator'); }, 4300);
+    later(function () { think('Joe', 'Something feels...different.', .41, .27, 3.6, 's1-02-joe'); }, 9200); }
+  c1.addEventListener('ended', function () { show(pb, 1); show(pa, 0); setTimeout(function () { show(c1, 0); }, 60); show(ash, 1);
+    type('Joe', 'Hello? What happened to this place?', 0, 's1-03-joe'); later(function () { show(ring, 1); show(tap, 1); }, 1800); });
+  ring.addEventListener('click', function () { if (!ring.classList.contains('on')) return; show(ring, 0); show(tap, 0); show(ash, 0); txt.textContent = ''; speaker('Narrator');
+    show(c2, 1); play(c2); later(function () { sfx('sputter', .55); }, 1200); later(function () { sfx('whoosh', .5); }, 3300); });
+  c2.addEventListener('ended', talkIn);
+  $('go').addEventListener('click', start);
+  speaker('Narrator');
+})();
+</script>
+</body>
+</html>

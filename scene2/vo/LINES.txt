@@ -1,0 +1,11 @@
+Storytime 2, Scene 2: lines to record (28 Oct)
+
+Save each take as an mp3 in this folder with exactly this name.
+
+File                     Who        Line
+s2-01-narrator.mp3       Narrator   Joe walked for days through a desert of ash. Embers drifted on the wind, and burnt villages poked through the dust...
+s2-02-joe.mp3            Joe        (thinking) Could this really all have been Trogdor?
+s2-03-joe.mp3            Joe        (thinking) A dragon's nest...and the eggs are gone.
+s2-03b-joe.mp3           Joe        A piece of eggshell...still warm.   (after picking up the shard)
+s2-04-narrator.mp3       Narrator   Just as his legs gave way, Joe saw it...a glowing oasis, shimmering in the distance.
+s2-05-narrator.mp3       Narrator   Was it real, or was the desert playing tricks?   (after the player taps the shimmer)
