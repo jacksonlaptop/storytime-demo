@@ -66,7 +66,14 @@ iframe.on{opacity:1;pointer-events:auto;}
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
   var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
-  function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); return f; }
+  function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); f.addEventListener('load', function () { curAway(f); }); return f; }
+  /* (Joe, 4 Nov: 'the mouse doesn't work on the overlay ... the circle stays'): the site cursor is drawn inside each part's frame, so over this page's own
+     controls (the picker, the moon, Click to begin) the frame stops hearing the mouse and its circle froze where it was. Over them the frame's circle hides
+     and this page's own pointer shows; back over the frame, its circle returns on the first move */
+  function curAway(f) { try { var d = f.contentDocument; if (!d || d._jjAway) return; d._jjAway = true; var st = d.createElement('style'); st.textContent = 'html.jj-away .custom-cursor,html.jj-away .cursor-trail{opacity:0!important;}'; d.head.appendChild(st);
+    d.addEventListener('mousemove', function () { d.documentElement.classList.remove('jj-away'); }, true);
+    d.addEventListener('mouseout', function (e) { if (!e.relatedTarget) d.documentElement.classList.add('jj-away'); }, true); } catch (e) {} }
+  document.addEventListener('mousemove', function () { [].forEach.call(document.querySelectorAll('iframe'), function (f) { try { f.contentDocument.documentElement.classList.add('jj-away'); } catch (e) {} }); }, true);
   function swap() {
     var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i;
     cur.classList.add('on'); try { cur.contentWindow.postMessage({ jj: 'go' }, location.origin); cur.focus(); } catch (e) {}
