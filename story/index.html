@@ -67,7 +67,7 @@ iframe.on{opacity:1;pointer-events:auto;}
 </script>
 <script>
 (function () {
-  var V = 16, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
+  var V = 17, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
   var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
@@ -103,13 +103,13 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!SCN) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/c148f48c8c37b7a2bd2dcdebcc5e83a3df8c3e3b/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/98f55d916e68889651775dd7232e0170441b1f15/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
     { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
     { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
     { n: 'Scene 3', head: 'Part Two, Scene 3: the dragon oasis', part: 3, shots: [['3.1', 23, P('3_2')], ['3.2', 24, P('3_2')], ['3.3', 26, P('3_3')], ['3.4', 30, P('3_4')], ['3.5', 34, P('3_5')], ['3.6', 39, P('3_6')], ['3.6b', 41, P('3_6b')], ['3.6d', 44, P('3_6d')], ['3.7', 48, P('3_7')], ['3.8', 53, P('3_8')], ['3.9', 64, P('3_9')]] },
     { n: 'Scene 4', head: 'Part Two, Scene 4: the sky journey', part: 3, shots: [['4.1', 66, P('4_1')], ['4.2', 67, P('4_2')]] },
-    { n: 'Scene 5', head: 'Part Two, Scene 5: the floating castle', part: 3, shots: [['5.1', 69, P('5_1')], ['5.2', 70, P('5_2')], ['5.3', 73, P('5_3')], ['5.3b', 76, null], ['5.3c', 79, null], ['5.3d', 83, null], ['5.3e', 84, null], ['5.3f', 91, null], ['5.4', 95, P('5_4')], ['5.4b', 97, null], ['5.5', 101, P('5_5')], ['5.6', 103, P('5_6')], ['5.7', 104, P('5_7-frost')]] }];
+    { n: 'Scene 5', head: 'Part Two, Scene 5: the floating castle', part: 3, shots: [['5.1', 69, P('5_1')], ['5.2', 70, P('5_2')], ['5.3', 73, P('5_3')], ['5.3b', 76, P('5_3b')], ['5.3c', 80, P('5_3c')], ['5.3d', 84, P('5_3d')], ['5.3e', 86, P('5_3e')], ['5.3f', 93, P('5_3f')], ['5.4', 97, P('5_4')], ['5.4b', 99, P('5_4b')], ['5.5', 103, P('5_5')], ['5.6', 105, P('5_6')], ['5.7', 106, P('5_7-frost')]] }];
   var css = document.createElement('style');
   css.textContent = '#jjp{position:fixed;left:16px;bottom:16px;z-index:50;font-family:"Joes Journey Headline",sans-serif;color:#fff;}#jjp.off{display:none;}' +
     '#jjp .pill,#jjp .tab{font:inherit;color:#fff;cursor:pointer;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;font-size:14px;line-height:1;transition:background .2s ease;}' +
