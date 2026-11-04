@@ -9,7 +9,7 @@
 /* Storytime so far: Part One, the portfolio card, then Part Two's scenes, one after another with nothing to press. Each part is its own page in a frame;
    the next one loads unseen while the current one plays, waits on its first picture, and cross-fades in when the current one says it is done. */
 html,body{margin:0;height:100%;background:#000;overflow:hidden;}
-iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000;opacity:0;pointer-events:none;transition:opacity .9s ease;}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:transparent;opacity:0;pointer-events:none;transition:opacity .9s ease;}
 iframe.on{opacity:1;pointer-events:auto;}
 
 /* the one sound control for every part: the site's moon, bottom right (each part's own moon is hidden in the flow). Light and playing = sound on; dark = muted */
@@ -26,6 +26,10 @@ iframe.on{opacity:1;pointer-events:auto;}
 /* Click to begin (Joe, 4 Nov: 'it says music is playing but it doesn't start for a long time ... it needs an action first'): browsers hold every sound until
    the visitor has clicked, so where they would, the tale waits behind this one button; the click lets every part's sound play (the frames are allowed autoplay).
    The classic glass button: 50% white border, black .4 and a blur, a white wipe on hover, pink when pressed. Nothing sits in front of it. */
+/* a loader of this page's own, under the first part's frame: it shows from the first moment until the part paints its own loader over it */
+#jjload{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:"Joes Journey Headline",sans-serif;font-size:14px;color:rgba(255,255,255,.8);pointer-events:none;}
+#jjload i{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:#e9c46a;animation:jjspin .9s linear infinite;}
+@keyframes jjspin{to{transform:rotate(360deg);}}
 #jjgo{position:fixed;inset:0;z-index:2147483646;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#000;font-family:"Joes Journey Headline",sans-serif;color:#fff;transition:opacity .6s ease;}
 #jjgo.out{opacity:0;pointer-events:none;}
 #jjgo button{position:relative;overflow:hidden;isolation:isolate;font:inherit;font-size:clamp(18px,2vw,24px);color:#fff;cursor:pointer;padding:16px 34px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:color .3s ease;}
@@ -35,6 +39,7 @@ iframe.on{opacity:1;pointer-events:auto;}
 </style>
 </head>
 <body>
+<div id="jjload"><i></i>Loading the tale...</div>
 <button id="jjm-moon" type="button" aria-label="Sound"><i class="cr" style="width:11px;height:11px;left:13px;top:15px;opacity:.2"></i><i class="cr" style="width:7px;height:7px;left:41px;top:32px;opacity:.14"></i><i class="cr" style="width:8px;height:8px;left:24px;top:43px;opacity:.12"></i><i class="bar" style="--bm:.5;--bd:.92s;--bl:-.2s"></i><i class="bar" style="--bm:.78;--bd:1.24s;--bl:-.75s"></i><i class="bar" style="--bm:1;--bd:1.06s;--bl:-.4s"></i><i class="bar" style="--bm:.78;--bd:1.38s;--bl:-1.1s"></i><i class="bar" style="--bm:.5;--bd:.84s;--bl:-.6s"></i></button>
 <script>
 /* sound: one state for every part (sessionStorage jjUserMuted, the site's own: '1' = muted), shown and set by the moon. The parts read it as they start and
@@ -75,7 +80,7 @@ iframe.on{opacity:1;pointer-events:auto;}
     d.addEventListener('mouseout', function (e) { if (!e.relatedTarget) d.documentElement.classList.add('jj-away'); }, true); } catch (e) {} }
   document.addEventListener('mousemove', function () { [].forEach.call(document.querySelectorAll('iframe'), function (f) { try { f.contentDocument.documentElement.classList.add('jj-away'); } catch (e) {} }); }, true);
   function swap() {
-    var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i;
+    var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i; var jl = document.getElementById('jjload'); if (jl) setTimeout(function () { jl.remove(); }, 1500);
     cur.classList.add('on'); try { cur.contentWindow.postMessage({ jj: 'go' }, location.origin); cur.focus(); } catch (e) {}
     if (old) setTimeout(function () { old.remove(); }, 1000);
     if (at + 1 < PARTS.length) setTimeout(function () { if (!nxt && at + 1 < PARTS.length) nxt = frame(at + 1); }, 4000);   // the next part loads behind this one
@@ -87,7 +92,9 @@ iframe.on{opacity:1;pointer-events:auto;}
   });
   /* would the browser hold the sound? (getAutoplayPolicy where there is one; otherwise a fresh audio context that comes up suspended) */
   function held() { try { if (navigator.getAutoplayPolicy) return navigator.getAutoplayPolicy('audiocontext') !== 'allowed'; var C = window.AudioContext || window.webkitAudioContext; if (!C) return false; var c = new C(), st = c.state; try { c.close(); } catch (e) {} return st !== 'running'; } catch (e) { return true; } }
-  function begin() { nxt = frame(FROM); nxt.addEventListener('load', swap, { once: true }); }
+  /* (Joe, 4 Nov: 'a very long black screen when you land'): the first part used to stay hidden until its frame had loaded EVERYTHING (its 'load'); it is
+     shown at once now, so its own loader ('Loading the tale...') is what you see while it loads; its turn ('go') still comes on that load */
+  function begin() { var f = nxt = frame(FROM); f.classList.add('on'); f.addEventListener('load', function () { if (nxt === f) swap(); }, { once: true }); }
   if (GATE || held()) { var g = document.createElement('div'); g.id = 'jjgo'; g.innerHTML = '<button type="button">Click to begin</button><p>Best with the sound on</p>'; document.body.appendChild(g);
     g.querySelector('button').addEventListener('click', function () { g.classList.add('out'); setTimeout(function () { g.remove(); }, 700); begin(); }, { once: true }); }
   else begin();   // Part One starts at once when the browser lets it play
