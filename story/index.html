@@ -89,7 +89,7 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!SCN) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f6558ef7eeb0dfe782c05afa115ae0ffabba8d0f/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/9890261e30b0d7b00da0111e34c498f4838c3659/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
     { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
     { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
