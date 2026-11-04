@@ -17,9 +17,10 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 .top{display:flex;justify-content:center;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 16px 6px;font-size:15px;opacity:.8;}
 .stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom));}
 .pw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size;}
-.pane{position:relative;flex:none;width:min(100cqw,calc(100cqh * 16 / 9));aspect-ratio:16/9;overflow:hidden;background:var(--bg);
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);-webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to bottom,transparent 0,#000 5%,#000 95%,transparent 100%),linear-gradient(to right,transparent 0,#000 2%,#000 98%,transparent 100%);mask-composite:intersect;}
+.pane{position:relative;flex:none;width:min(100cqw,calc(100cqh * 16 / 9));aspect-ratio:16/9;overflow:hidden;background:var(--bg);}
+/* (performance, Joe 3 Nov: Grik's scene lagged on an Intel Mac) the soft edges are the page's own black laid over the picture, under the dialogue box, not a mask on it:
+   a mask made the browser draw every video frame twice */
+.pane::after{content:"";position:absolute;inset:0;z-index:14;pointer-events:none;background:linear-gradient(to bottom,var(--bg) 0,transparent 5%,transparent 95%,var(--bg) 100%),linear-gradient(to right,var(--bg) 0,transparent 2%,transparent 98%,var(--bg) 100%);}
 .pane img.plate,.pane video,.pane canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
 .pane .on{opacity:1!important;}
 /* the camera: the painting and the two cut-outs move together (a slow push-in through the conversation) */
@@ -90,7 +91,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 }
 </style>
 <style>@font-face{font-family:"Joes Journey Hieroglyphics";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532592f_Joes%20Journey%20Hieroglyphics.otf") format("opentype");font-display:swap;}</style>
-<link rel="stylesheet" href="../kit.css?v=6">
+<link rel="stylesheet" href="../kit.css?v=7">
 <script src="../kit.js?v=6"></script>
 </head>
 <body>
@@ -191,7 +192,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
     gl.uniform4fv(gl.getUniformLocation(pr, 'S'), SPIRALS);
     var uT = gl.getUniformLocation(pr, 't'), uK = gl.getUniformLocation(pr, 'k'), maskIn = false, cur = null, fresh = true;
     return function draw(now, src) {
-      var d = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(canvas.offsetWidth * d), h = Math.round(canvas.offsetHeight * d);
+      var d = .5, w = Math.round(canvas.offsetWidth * d), h = Math.round(canvas.offsetHeight * d);   // (the swirl at half size, stretched: a quarter of the pixels to shade)
       if (!w || !src) return; if (canvas.width !== w) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
       if (!maskIn) { if (!maskImg.complete || !maskImg.naturalWidth) return; gl.activeTexture(gl.TEXTURE1); gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, maskImg); gl.activeTexture(gl.TEXTURE0); maskIn = true; }
       var vid = src.tagName === 'VIDEO';
@@ -211,7 +212,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
   var ax = ash.getContext('2d'), F = [], t0 = 0;
   for (var i = 0; i < 70; i++) F.push({ x: Math.random(), y: Math.random(), r: .0008 + Math.random() * .0016, v: .012 + Math.random() * .02, ph: Math.random() * 6.3, sw: .006 + Math.random() * .012, a: .25 + Math.random() * .45 });
   var lean = 0;
-  (function step(now) { requestAnimationFrame(step); var dt = t0 ? Math.min(.05, (now - t0) / 1000) : 0; t0 = now; var W = ash.clientWidth, H = ash.clientHeight, d = Math.min(2, devicePixelRatio || 1); var s = now / 1000;
+  (function step(now) { requestAnimationFrame(step); var dt = t0 ? Math.min(.05, (now - t0) / 1000) : 0; t0 = now; var W = ash.clientWidth, H = ash.clientHeight, d = 1; var s = now / 1000;
     if (W) { if (ash.width !== Math.round(W * d)) { ash.width = Math.round(W * d); ash.height = Math.round(H * d); } ax.setTransform(d, 0, 0, d, 0, 0); ax.clearRect(0, 0, W, H);
       F.forEach(function (f) { f.y += f.v * dt; f.ph += dt * .8; if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); } var px = (f.x + Math.sin(f.ph) * f.sw) * W, py = f.y * H, r = Math.max(.7, f.r * W);
         ax.fillStyle = 'rgba(205,200,210,' + f.a + ')'; ax.beginPath(); ax.arc(px, py, r, 0, 6.283); ax.fill(); }); }

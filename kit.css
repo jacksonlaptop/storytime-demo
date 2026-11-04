@@ -9,12 +9,12 @@
 @media (min-aspect-ratio:16/9){.pane{top:calc(.75 * (100vh - .5625 * min(100vw,220vh)));}}
 
 /* the dialogue box: over the bottom of the screen, as the engine's */
-.cap{position:absolute;left:50%;bottom:5vh;translate:-50% 0;margin:0;z-index:15;width:min(66vw,1000px);--fs:clamp(56px,6.2vw,104px);padding:calc(var(--fs) / 2 + 8px) 28px 18px;font-size:clamp(15px,1.6vw,27px);line-height:1.26;}
-.cap .face{left:18px;}
-.cap .who{left:calc(18px + var(--fs) - 4px);font-size:clamp(13px,1.1vw,19px);}
+.cap{position:absolute;left:50%;bottom:8px;translate:-50% 0;margin:0;z-index:15;width:min(66vw,1000px);--fs:clamp(46px,4.6vw,76px);padding:clamp(18px,1.7vw,26px) clamp(76px,6.6vw,110px) 12px calc(14px + var(--fs) + 12px);font-size:clamp(15px,1.6vw,27px);line-height:1.26;}
+.cap .face{left:14px;}
+.cap .who{left:calc(14px + var(--fs) - 4px);font-size:clamp(13px,1.1vw,19px);}
 .cap .tap{margin-top:.5em;font-size:clamp(14px,1.35vw,23px);}
 @media (max-height:430px) and (orientation:landscape){
-  .cap{width:min(66vw,600px);--fs:44px;padding:calc(var(--fs) / 2 + 4px) 14px 10px;bottom:max(6px,2vh);font-size:13px;line-height:1.2;}
+  .cap{width:min(66vw,600px);--fs:38px;padding:14px 64px 8px calc(10px + var(--fs) + 8px);bottom:8px;font-size:13px;line-height:1.2;}
   .cap .face{border-width:2px;}.cap .tap{margin-top:3px;font-size:13px;}
   #jjk-ctl{gap:6px;}#jjk-ctl .jb{width:36px;height:36px;}#jjk-ctl .jb svg{width:14px;height:14px;}
 }

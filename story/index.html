@@ -51,10 +51,10 @@ iframe.on{opacity:1;pointer-events:auto;}
 </script>
 <script>
 (function () {
-  var V = 14, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
+  var V = 15, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
-  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') === '1'; q.delete('scenes'); var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
+  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
   function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); return f; }
   function swap() {
     var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i;
@@ -69,23 +69,23 @@ iframe.on{opacity:1;pointer-events:auto;}
   });
   nxt = frame(FROM); nxt.addEventListener('load', swap, { once: true });   // Part One starts at once
 
-  /* the scene picker (Joe, 3 Nov): on by itself in the local preview, elsewhere only with ?scenes=1. A 'Scenes' pill bottom left opens a strip: a tab per
+  /* the scene picker (Joe, 3 Nov): on for everyone (Joe: 'i wanted that scene by scene picker'); ?scenes=0 hides it. A 'Scenes' pill bottom left opens a strip: a tab per
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
-  if (!(/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || SCN)) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/d3c993d8756871914c3ff79871f103b6018909f7/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
-  var PICK = [{ n: 'Part One', head: 'The tale so far: the portal at the end of Part One', part: 0, shots: [['From the start', null, GH + 'story-wood-portal-15-poster.webp']] },
-    { n: 'Scene 1', head: 'EXT. THE PORTAL WASTELAND — DUSK', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
-    { n: 'Scene 2', head: 'EXT. THE ASH DESERT — DAY', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
-    { n: 'Scene 3', head: 'EXT. THE OASIS', part: 3, shots: [['3.1', 23, P('3_2')], ['3.2', 24, P('3_2')], ['3.3', 26, P('3_3')], ['3.4', 30, P('3_4')], ['3.5', 34, P('3_5')], ['3.6', 39, P('3_6')], ['3.6b', 41, P('3_6b')], ['3.6d', 44, P('3_6d')], ['3.7', 48, P('3_7')], ['3.8', 53, P('3_8')], ['3.9', 64, P('3_9')]] },
-    { n: 'Scene 4', head: 'EXT. THE SKY — THE JOURNEY', part: 3, shots: [['4.1', 66, P('4_1')], ['4.2', 67, P('4_2')]] },
-    { n: 'Scene 5', head: 'EXT. THE FLOATING CASTLE — DAY', part: 3, shots: [['5.1', 69, P('5_1')], ['5.2', 70, P('5_2')], ['5.3', 73, P('5_3')], ['5.4', 75, P('5_4')], ['5.5', 78, P('5_5')], ['5.6', 80, P('5_6')], ['5.7', 81, P('5_7-frost')]] }];
+  if (!SCN) return;
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f6558ef7eeb0dfe782c05afa115ae0ffabba8d0f/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
+    { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
+    { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
+    { n: 'Scene 3', head: 'Part Two, Scene 3: the dragon oasis', part: 3, shots: [['3.1', 23, P('3_2')], ['3.2', 24, P('3_2')], ['3.3', 26, P('3_3')], ['3.4', 30, P('3_4')], ['3.5', 34, P('3_5')], ['3.6', 39, P('3_6')], ['3.6b', 41, P('3_6b')], ['3.6d', 44, P('3_6d')], ['3.7', 48, P('3_7')], ['3.8', 53, P('3_8')], ['3.9', 64, P('3_9')]] },
+    { n: 'Scene 4', head: 'Part Two, Scene 4: the sky journey', part: 3, shots: [['4.1', 66, P('4_1')], ['4.2', 67, P('4_2')]] },
+    { n: 'Scene 5', head: 'Part Two, Scene 5: the floating castle', part: 3, shots: [['5.1', 69, P('5_1')], ['5.2', 70, P('5_2')], ['5.3', 73, P('5_3')], ['5.4', 75, P('5_4')], ['5.5', 78, P('5_5')], ['5.6', 80, P('5_6')], ['5.7', 81, P('5_7-frost')]] }];
   var css = document.createElement('style');
   css.textContent = '#jjp{position:fixed;left:16px;bottom:16px;z-index:50;font-family:"Joes Journey Headline",sans-serif;color:#fff;}#jjp.off{display:none;}' +
     '#jjp .pill,#jjp .tab{font:inherit;color:#fff;cursor:pointer;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;font-size:14px;line-height:1;transition:background .2s ease;}' +
     '#jjp .pill:hover,#jjp .tab:hover{background:rgba(255,255,255,.2);}#jjp .tab.on{background:rgba(255,255,255,.85);color:#111;}' +
     '#jjp .pan{position:fixed;left:16px;right:16px;bottom:64px;max-width:1200px;padding:12px;border-radius:18px;background:#080b14;border:1px solid rgba(255,255,255,.5);opacity:0;translate:0 12px;pointer-events:none;transition:opacity .25s ease,translate .25s ease;}' +
-    '#jjp.open .pan{opacity:1;translate:0 0;pointer-events:auto;}#jjp .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}#jjp .tab{flex:none;padding:6px 12px;font-size:13px;}' +
+    '#jjp.open .pan{opacity:1;translate:0 0;pointer-events:auto;}#jjp .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}#jjp .tab{flex:none;padding:6px 12px;font-size:13px;}#jjp .grp{flex:none;align-self:center;font-size:13px;opacity:.75;margin:0 2px 0 10px;padding-left:12px;border-left:1px solid rgba(255,255,255,.35);}' +
     '#jjp .head{font-size:13px;opacity:.8;margin:2px 4px 8px;}#jjp .row{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin;}' +
     '#jjp .sh{flex:none;width:clamp(112px,14vw,176px);cursor:pointer;background:none;border:0;padding:0;color:#fff;font:inherit;text-align:left;}' +
     '#jjp .sh i{display:block;aspect-ratio:16/9;border-radius:10px;background:#1a2033 center/cover no-repeat;box-shadow:0 0 0 1px rgba(255,255,255,.25);opacity:.92;transition:box-shadow .2s ease,opacity .2s ease;}' +
@@ -98,12 +98,14 @@ iframe.on{opacity:1;pointer-events:auto;}
   function here() { var w = inner(), c = ''; try { c = String(w.jjStory.api.comp() || '').slice(3); } catch (e) {} return c; }
   function sceneNow() { var c = here(); return PICK.filter(function (sc) { return sc.part === at && (sc.part < 3 || sc.shots.some(function (s) { return s[0] === c; })); })[0] || PICK.filter(function (sc) { return sc.part === at; })[0] || PICK[0]; }
   function go(sc, sh) { root.classList.remove('open');
-    if (sc.part === at && sh[1] != null && inner()) { inner().postMessage({ jj: 'jump', scene: sh[1] }, location.origin); return; }   // (a shot in the part already playing)
-    if (nxt) nxt.remove(); want = false; nxt = frame(sc.part, sh[1] != null ? 'scene=' + sh[1] : ''); nxt.addEventListener('load', swap, { once: true }); }
+    var book = false; try { book = !!cur.contentDocument.getElementById('jjst-book'); } catch (e) {}
+    if (sc.part === at && sh[1] != null && inner() && !book) { inner().postMessage({ jj: 'jump', scene: sh[1] }, location.origin); return; }   // (a shot in the part already playing; not under Part One's storybook opening: that part is loaded again at the shot, which skips the book)
+    if (nxt) nxt.remove(); want = false; var nf = nxt = frame(sc.part, sh[1] != null ? 'scene=' + sh[1] : ''); nxt.addEventListener('load', swap, { once: true });
+    var t0 = Date.now(), ask = setInterval(function () { try { var d = nf.contentDocument, so = d && d.getElementById('jjst-sndov'), no = d && d.getElementById('jjst-nosnd'); if (so && no && so.classList.contains('on')) { clearInterval(ask); no.click(); } } catch (e) {} if (Date.now() - t0 > 30000) clearInterval(ask); }, 150); }   // (the sound was answered at the start: a picked part never asks again; the moon keeps the choice)
   function show(sc) { [].forEach.call(tabs.children, function (t) { t.classList.toggle('on', t._sc === sc); }); head.textContent = sc.head; row.innerHTML = ''; var c = here();
     sc.shots.forEach(function (sh) { var b = document.createElement('button'); b.type = 'button'; b.className = 'sh' + ((sc.part === at && (sh[1] == null || sh[0] === c)) ? ' on' : ''); b.innerHTML = '<i></i><span></span>';
       b.firstChild.style.backgroundImage = 'url("' + sh[2] + '")'; b.lastChild.textContent = sh[0]; b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); go(sc, sh); }); row.appendChild(b); }); }
-  PICK.forEach(function (sc) { var t = document.createElement('button'); t.type = 'button'; t.className = 'tab'; t.textContent = sc.n; t._sc = sc; t.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); show(sc); }); tabs.appendChild(t); });
+  PICK.forEach(function (sc) { if (sc.grp) { var g = document.createElement('span'); g.className = 'grp'; g.textContent = sc.grp; tabs.appendChild(g); }   /* (Joe, 4 Nov: 'not clear that scene 1 etc are part 2') */ var t = document.createElement('button'); t.type = 'button'; t.className = 'tab'; t.textContent = sc.n; t._sc = sc; t.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); show(sc); }); tabs.appendChild(t); });
   root.querySelector('.pill').addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); var op = !root.classList.contains('open'); if (op) show(sceneNow()); root.classList.toggle('open', op); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') root.classList.remove('open'); });
   setInterval(function () { var hide = false; try { var d = cur && cur.contentDocument; hide = !cur || !!(d && d.querySelector('#jjst-sndov.on')); } catch (e) {} root.classList.toggle('off', hide); if (hide) root.classList.remove('open'); }, 300);   // (never over the sound question)
