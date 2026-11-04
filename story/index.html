@@ -21,6 +21,17 @@ iframe.on{opacity:1;pointer-events:auto;}
 @keyframes jjmBar{0%{transform:scaleY(calc(var(--bm,1) * .22));}40%{transform:scaleY(calc(var(--bm,1) * .95));}68%{transform:scaleY(calc(var(--bm,1) * .48));}100%{transform:scaleY(calc(var(--bm,1) * .8));}}
 @media (prefers-reduced-motion:reduce){#jjm-moon .bar{animation:none;transform:scaleY(calc(var(--bm,1) * .6));}}
 @media (max-width:767px){#jjm-moon{right:16px;bottom:16px;width:52px;height:52px;}}
+/* the site's own headline font (Webflow's file), so the picker and the gate read in Joe's Journey's type everywhere, not only where it is installed */
+@font-face{font-family:"Joes Journey Headline";src:url("https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/6a19b8f4191d4fbca532594d_Joes%20Journey%20Headline.otf") format("opentype");font-display:swap;}
+/* Click to begin (Joe, 4 Nov: 'it says music is playing but it doesn't start for a long time ... it needs an action first'): browsers hold every sound until
+   the visitor has clicked, so where they would, the tale waits behind this one button; the click lets every part's sound play (the frames are allowed autoplay).
+   The classic glass button: 50% white border, black .4 and a blur, a white wipe on hover, pink when pressed. Nothing sits in front of it. */
+#jjgo{position:fixed;inset:0;z-index:2147483646;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#000;font-family:"Joes Journey Headline",sans-serif;color:#fff;transition:opacity .6s ease;}
+#jjgo.out{opacity:0;pointer-events:none;}
+#jjgo button{position:relative;overflow:hidden;isolation:isolate;font:inherit;font-size:clamp(18px,2vw,24px);color:#fff;cursor:pointer;padding:16px 34px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:color .3s ease;}
+#jjgo button::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.5);transform:translateX(-101%);transition:transform .35s ease;z-index:-1;}
+#jjgo button:hover::before{transform:none;}#jjgo button:focus{outline:none;}#jjgo button:focus-visible{box-shadow:0 0 0 3px rgba(255,255,255,.6);}#jjgo button:active{background:#ff4fd8;}
+#jjgo p{margin:0;font-size:14px;opacity:.7;}
 </style>
 </head>
 <body>
@@ -54,7 +65,7 @@ iframe.on{opacity:1;pointer-events:auto;}
   var V = 15, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
-  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
+  var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
   function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); return f; }
   function swap() {
     var old = cur; cur = nxt; nxt = null; want = false; at = +cur.dataset.i;
@@ -67,7 +78,12 @@ iframe.on{opacity:1;pointer-events:auto;}
     if (e.data.jj === 'done' && cur && e.source === cur.contentWindow && at + 1 < PARTS.length) { want = true; if (!nxt) nxt = frame(at + 1); if (nxt.dataset.ready) swap(); }
     if (e.data.jj === 'ready' && nxt && e.source === nxt.contentWindow) { nxt.dataset.ready = 1; if (want) swap(); }
   });
-  nxt = frame(FROM); nxt.addEventListener('load', swap, { once: true });   // Part One starts at once
+  /* would the browser hold the sound? (getAutoplayPolicy where there is one; otherwise a fresh audio context that comes up suspended) */
+  function held() { try { if (navigator.getAutoplayPolicy) return navigator.getAutoplayPolicy('audiocontext') !== 'allowed'; var C = window.AudioContext || window.webkitAudioContext; if (!C) return false; var c = new C(), st = c.state; try { c.close(); } catch (e) {} return st !== 'running'; } catch (e) { return true; } }
+  function begin() { nxt = frame(FROM); nxt.addEventListener('load', swap, { once: true }); }
+  if (GATE || held()) { var g = document.createElement('div'); g.id = 'jjgo'; g.innerHTML = '<button type="button">Click to begin</button><p>Best with the sound on</p>'; document.body.appendChild(g);
+    g.querySelector('button').addEventListener('click', function () { g.classList.add('out'); setTimeout(function () { g.remove(); }, 700); begin(); }, { once: true }); }
+  else begin();   // Part One starts at once when the browser lets it play
 
   /* the scene picker (Joe, 3 Nov): on for everyone (Joe: 'i wanted that scene by scene picker'); ?scenes=0 hides it. A 'Scenes' pill bottom left opens a strip: a tab per
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
