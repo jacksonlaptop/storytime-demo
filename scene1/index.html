@@ -27,7 +27,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 .cam{position:absolute;inset:0;transform-origin:0 0;transition:transform 1.3s cubic-bezier(.45,0,.25,1);}
 .cam.out{transition:transform .8s ease;}
 #joe{position:absolute;left:30.94%;top:26.56%;width:17.62%;opacity:0;transition:opacity .4s ease;transform-origin:50% 96%;will-change:transform;z-index:2;}
-#tj,#tg{z-index:1;}   /* the talk loops sit over the animated sky (it paints the whole plate) and under the cut-outs, which hide while a loop is up */
+#tj{z-index:1;}   /* the talk loops sit over the animated sky (it paints the whole plate) and under the cut-outs, which hide while a loop is up */
 #grik{position:absolute;left:52.75%;top:31.44%;width:12.81%;opacity:0;transition:opacity .4s ease;will-change:transform;z-index:3;}
 .sm{position:absolute;top:10px;right:10px;z-index:20;font-size:13px;}
 .snd{display:flex;align-items:center;gap:7px;font:inherit;color:#fff;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px 5px 9px;cursor:pointer;margin-left:auto;transition:background .2s ease;}
@@ -99,7 +99,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 <div class="top">Storytime 2 · Scene 1 · painted test</div>
 <div class="stage">
   <div class="pw"><div class="pane" id="pane">
-    <div class="cam" id="cam"><img class="plate on" id="pa" src="plate-a.jpg" alt=""><img class="plate" id="pb" src="plate-b.jpg" alt=""><video class="plate" id="tj" src="talk-joe.mp4" muted loop playsinline preload="auto"></video><video class="plate" id="tg" src="talk-grik.mp4" muted loop playsinline preload="auto"></video><canvas id="skyp"></canvas><img id="joe" src="joe.png" alt=""><img id="grik" src="grik.png" alt=""><img id="castle" src="castle-haze.webp" alt=""><div id="gp"></div></div>
+    <div class="cam" id="cam"><img class="plate on" id="pa" src="plate-a.jpg" alt=""><img class="plate" id="pb" src="plate-b.jpg" alt=""><video class="plate" id="tj" src="talk-joe.mp4" muted loop playsinline preload="auto"></video><canvas id="skyp"></canvas><img id="joe" src="joe.png" alt=""><img id="grik" src="grik.png" alt=""><img id="castle" src="castle-haze.webp" alt=""><div id="gp"></div></div>
     <video id="c1" src="c1.mp4" muted playsinline preload="auto"></video><video id="c2" src="c2.mp4" muted playsinline preload="auto"></video><video id="c3" src="c3.mp4" muted playsinline preload="auto"></video><canvas id="skyc"></canvas>
     <canvas id="ash"></canvas><div id="dim"></div><video id="mem" src="memory.mp4" muted playsinline preload="auto"></video>
     <div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div>
@@ -177,8 +177,8 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
   var SWIRL = 3, SPIRALS = [.19, .07, .10, 1, .38, .09, .11, -1, .16, .19, .06, -1, .30, .02, .06, 1];
   var SFS = 'precision mediump float;varying vec2 uv;uniform sampler2D tex,msk;uniform float t,k;uniform vec4 S[4];' +
     'vec2 spin(vec2 q,vec4 s){vec2 d=q-s.xy;d.y*=.5625;float r=length(d);float f=smoothstep(s.z,s.z*.15,r);return s.w*f*vec2(-d.y,d.x)/max(r,.02)*.5;}' +
-    'void main(){vec2 fl=spin(uv,S[0])+spin(uv,S[1])+spin(uv,S[2])+spin(uv,S[3])+vec2(.12,-.04);fl*=texture2D(msk,uv).r*k*.035;' +
-    'float P=3.2;float a=fract(t/P),b=fract(t/P+.5);gl_FragColor=mix(texture2D(tex,uv-fl*a),texture2D(tex,uv-fl*b),abs(1.-2.*a));}';
+    'void main(){float m=texture2D(msk,uv).r;vec2 fl=spin(uv,S[0])+spin(uv,S[1])+spin(uv,S[2])+spin(uv,S[3])+vec2(.12,-.04);fl*=m*k*.035;' +
+    'float P=3.2;float a=fract(t/P),b=fract(t/P+.5);vec4 c=mix(texture2D(tex,uv-fl*a),texture2D(tex,uv-fl*b),abs(1.-2.*a));gl_FragColor=vec4(c.rgb*m,m);}';   /* (5 Nov, Joe: 'really pixelated'): only the sky is drawn, at half size; everything else is the full-size picture under the canvas */
   var SVS = 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
   var maskImg = new Image(); maskImg.src = 'sky-mask.png';
   function Sky(canvas) {
@@ -235,9 +235,9 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
     im.style.width = (w * 100) + '%'; im.style.left = ((.583 - p[2] * w) * 100) + '%'; im.style.top = ((.375 - p[3] * h) * 100) + '%'; gp.appendChild(im); });
   /* the talk loops (Joe, 5 Nov: S1-7, S1-8): plate C with one of them talking, the other listening; over the plate while that one has the line
      (Grik's gesture poses keep their cut-outs: the loop is for Joe's lines and Grik's plain ones). The cut-outs hide once a loop is up. */
-  var tj = $('tj'), tg = $('tg'), talking = null, talkT = 0;
+  var tj = $('tj'), talking = null, talkT = 0;
   function talk(k) { if (talking === k) return; talking = k; clearTimeout(talkT);
-    [[tj, 'Joe'], [tg, 'Grik']].forEach(function (p) { var v = p[0]; if (p[1] === k) { play(v); show(v, 1); } else if (v.classList.contains('on')) { show(v, 0); setTimeout(function () { if (!v.classList.contains('on')) v.pause(); }, 450); } });
+    [[tj, 'Joe']].forEach(function (p) { var v = p[0]; if (p[1] === k) { play(v); show(v, 1); } else if (v.classList.contains('on')) { show(v, 0); setTimeout(function () { if (!v.classList.contains('on')) v.pause(); }, 450); } });
     if (k) talkT = setTimeout(function () { [joe, grik, gp].forEach(function (e) { e.style.visibility = 'hidden'; }); }, 420);
     else [joe, grik, gp].forEach(function (e) { e.style.visibility = ''; }); }
   function pose(n) { var plate = n === 'plate'; show(grik, plate); show(gp, !plate); [].forEach.call(gp.children, function (im) { show(im, im.dataset.p === n); }); }
@@ -264,7 +264,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
   function ask() { if (asked) return; asked = true; talk(null); clearInterval(typeT); speaking = null; speaker('Joe'); txt.textContent = ''; choosing = true; show(ch, 1); }
   function say(L, after) { clearTimeout(lineT);
     if (L.cam) shot(L.cam); if (L.pose) pose(L.pose);
-    talk(L.w === 'Joe' ? 'Joe' : L.w === 'Grik' && (!L.pose || L.pose === 'plate' || L.pose === 'hand') ? 'Grik' : null);
+    talk(L.w === 'Joe' ? 'Joe' : null);   /* (Joe, 5 Nov: Grik's talk loop did not look good: he keeps his poses) */
     if (!L.w) { lineT = setTimeout(after, L.ms); return; }
     type(L.w, L.t, L.alien, L.id, L.join); if (L.choose) nxOff(); else nxOn(L.ms || 1500 + L.t.length * 48);
     if (L.cue) { var at = Math.max(0, L.t.indexOf(L.cue[0])); later(L.cue[1], at * 34); }
