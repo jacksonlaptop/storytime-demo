@@ -67,11 +67,11 @@ iframe.on{opacity:1;pointer-events:auto;}
 </script>
 <script>
 (function () {
-  var V = 24, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
+  var V = 25, PARTS = ['../journey/', '../scene3/', '../scene2/', '../scene3/'], PEX = { 1: 'until=2.1' };   /* (Joe, 5 Nov: one source of truth): Scene 1 is storytime2.js too (the scene3/ page from line 0, handing on at 2.1); Scene 2 is still its own page until it moves in */
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
   var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
-  function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (ex != null ? (ex ? '&' + ex : '') : (i === FROM && EXTRA ? '&' + EXTRA : '')); document.body.appendChild(f); f.addEventListener('load', function () { curAway(f); }); return f; }
+  function frame(i, ex) { var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.title = 'Storytime'; f.dataset.i = i; f.src = PARTS[i] + '?flow=1&v=' + V + (PEX[i] ? '&' + PEX[i] : '') + (ex != null ? (ex ? '&' + ex : (PEX[i] ? '&scene=0' : '')) : (i === FROM && EXTRA ? '&' + EXTRA : (PEX[i] ? '&scene=0' : ''))); document.body.appendChild(f); f.addEventListener('load', function () { curAway(f); }); return f; }
   /* (Joe, 4 Nov: 'the mouse doesn't work on the overlay ... the circle stays'): the site cursor is drawn inside each part's frame, so over this page's own
      controls (the picker, the moon, Click to begin) the frame stops hearing the mouse and its circle froze where it was. Over them the frame's circle hides
      and this page's own pointer shows; back over the frame, its circle returns on the first move */
@@ -103,14 +103,14 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!SCN) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/52dc1e2e8fcc73b69c5513f1c52e835999955ba1/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/3d317f65c39010dd4635b31da89dd3148a6d58ae/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
-    { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
+    { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['1.1', 0, P('1_1')], ['1.2', 3, P('1_2')], ['1.3', 5, P('1_3')], ['1.4', 18, P('1_4')]] },
     { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
-    { n: 'Scene 3', head: 'Part Two, Scene 3: the dragon oasis', part: 3, shots: [['3.1', 23, P('3_2')], ['3.2', 24, P('3_2')], ['3.3', 26, P('3_3')], ['3.4', 30, P('3_4')], ['3.5', 35, P('3_5')], ['3.6', 40, P('3_6')], ['3.6b', 42, P('3_6b')], ['3.6d', 45, P('3_6d')], ['3.7', 49, P('3_7')], ['3.8', 54, P('3_8')], ['3.9', 65, P('3_9')]] },
-    { n: 'Scene 4', head: 'Part Two, Scene 4: the sky journey', part: 3, shots: [['4.1', 67, P('4_1')], ['4.2', 68, P('4_2')]] },
-    { n: 'Scene 5', head: 'Part Two, Scene 5: the floating castle', part: 3, shots: [['5.1', 70, P('5_1')], ['5.2', 71, P('5_2')], ['5.3', 74, P('5_3')], ['5.3b', 77, P('5_3b')], ['5.3c', 81, P('5_3c')], ['5.3d', 85, P('5_3d')], ['5.3e', 87, P('5_3e')], ['5.3f', 94, P('5_3f')], ['5.4', 98, P('5_4')], ['5.4b', 100, P('5_4b')], ['5.5', 104, P('5_5')], ['5.6', 106, P('5_6')], ['5.7', 107, P('5_7-frost')]] },
-    { n: 'Scene 5B', head: 'Part Two, Scene 5B: the way home', part: 3, shots: [['5B.1', 109, P('5B_1')], ['5B.2', 111, P('5B_2-frost')], ['5B.3', 112, P('5B_3')], ['5B.4', 113, P('5B_4')], ['5B.5', 115, P('5B_5')]] }];
+    { n: 'Scene 3', head: 'Part Two, Scene 3: the dragon oasis', part: 3, shots: [['3.1', 27, P('3_2')], ['3.2', 28, P('3_2')], ['3.3', 30, P('3_3')], ['3.4', 34, P('3_4')], ['3.5', 39, P('3_5')], ['3.6', 44, P('3_6')], ['3.6b', 46, P('3_6b')], ['3.6d', 49, P('3_6d')], ['3.7', 53, P('3_7')], ['3.8', 58, P('3_8')], ['3.9', 69, P('3_9')]] },
+    { n: 'Scene 4', head: 'Part Two, Scene 4: the sky journey', part: 3, shots: [['4.1', 71, P('4_1')], ['4.2', 72, P('4_2')]] },
+    { n: 'Scene 5', head: 'Part Two, Scene 5: the floating castle', part: 3, shots: [['5.1', 74, P('5_1')], ['5.2', 75, P('5_2')], ['5.3', 78, P('5_3')], ['5.3b', 81, P('5_3b')], ['5.3c', 85, P('5_3c')], ['5.3d', 89, P('5_3d')], ['5.3e', 91, P('5_3e')], ['5.3f', 98, P('5_3f')], ['5.4', 102, P('5_4')], ['5.4b', 104, P('5_4b')], ['5.5', 108, P('5_5')], ['5.6', 110, P('5_6')], ['5.7', 111, P('5_7-frost')]] },
+    { n: 'Scene 5B', head: 'Part Two, Scene 5B: the way home', part: 3, shots: [['5B.1', 113, P('5B_1')], ['5B.2', 115, P('5B_2-frost')], ['5B.3', 116, P('5B_3')], ['5B.4', 117, P('5B_4')], ['5B.5', 119, P('5B_5')]] }];
   var css = document.createElement('style');
   css.textContent = '#jjp{position:fixed;left:16px;bottom:16px;z-index:50;font-family:"Joes Journey Headline",sans-serif;color:#fff;}#jjp.off{display:none;}' +
     '#jjp .pill,#jjp .tab{font:inherit;color:#fff;cursor:pointer;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 16px;font-size:14px;line-height:1;transition:background .2s ease;}' +

@@ -1,5 +1,5 @@
 <!DOCTYPE html><!-- This site was created in Webflow. https://webflow.com --><!-- Last Published: Wed Oct 21 2026 21:24:45 GMT+0000 (Coordinated Universal Time) --><html data-wf-domain="joes-journey-7aa95a75086c-f822a4b08fd5a.webflow.io" data-wf-page="6a3e84d14d6de90e96b891c4" data-wf-site="6a19b8f4191d4fbca532591e" data-wf-status="1"><head><script>/* demo: Storytime 2 Scene 3 in the older animated style, from the oasis reveal (beat 23, s2_3.1) to the take-off (s2_3.9); ?st2=1 = the sequel; every shot painted, from Joe's Dreamina takes and the painted plates (?whole=1&look=ns, st2-28f) */
-try { var q = new URLSearchParams(location.search), ch = 0; [['st2', '1'], ['scene', '23'], ['book', '0'], ['ui', '2'], ['whole', '1'], ['look', 'ns']].forEach(function (kv) { if (!q.has(kv[0])) { q.set(kv[0], kv[1]); ch = 1; } });
+try { var q = new URLSearchParams(location.search), ch = 0; [['st2', '1'], ['scene', '27'], ['book', '0'], ['ui', '2'], ['whole', '1'], ['look', 'ns']].forEach(function (kv) { if (!q.has(kv[0])) { q.set(kv[0], kv[1]); ch = 1; } });
   if (ch) history.replaceState(null, '', location.pathname + '?' + q.toString() + location.hash); } catch (e) {}</script>
 <script>/* demo: the one-flow page (../story/) plays this page in a frame: the page says when it is ready, waits for its turn ('go'), and says when it is done.
    Until its turn it stays silent (the preview's own mute is left alone: sound comes back only where it was not muted) */
@@ -26,7 +26,7 @@ var FLOW = (function () {
 })();</script>
 <script>/* demo: the repo's scripts and art come from one place. jsDelivr refuses this repo (over its 50 MB package limit: only files it cached long ago still load),
    so the share link reads a pinned commit through rawcdn.githack; the local preview (the site proxy, port 3800) reads the staged files */
-var JJD_REF = '52dc1e2e8fcc73b69c5513f1c52e835999955ba1';
+var JJD_REF = '3d317f65c39010dd4635b31da89dd3148a6d58ae';
 var JJD = location.port === '3800' ? '/gh/' : (JJD_REF === 'main' ? 'https://raw.githack.com/jacksonlaptop/joes-journey-code/main/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/' + JJD_REF + '/');
 window.JJ_STORY_BASE = window.JJ_SCORE_BASE = JJD;
 /* (Joe, 4 Nov: 'a very long black screen'): the scripts load one after another before the page can draw, and through githack each took about a second
@@ -343,8 +343,11 @@ function jjdLoader() { var L = window.JJLoader; if (!L || !L.start || L.start._j
   addEventListener('jj:mystory-lift', card);
   /* in the one flow the visitor has already answered the sound question (at the start of Part One): it is not asked again; muted stays muted, the mute button is there */
   if (FLOW.on) { var sq = setInterval(function () { var so = document.getElementById('jjst-sndov'), no = document.getElementById('jjst-nosnd'); if (so && no && so.classList.contains('on')) { clearInterval(sq); no.click(); } }, 100); setTimeout(function () { clearInterval(sq); }, 60000); }
+  /* (Joe, 5 Nov) the flow plays Scene 1 from this page too (?until=2.1): it hands on to the next part as the story reaches that shot, with no card */
+  var UNTIL = (/[?&]until=([0-9.]+)/.exec(location.search) || [])[1];
+  if (UNTIL) { var ut = setInterval(function () { try { var A = window.jjStory.api, c = (typeof A === 'function' ? A() : A).comp(); if (c.indexOf('s2_' + UNTIL) === 0) { clearInterval(ut); clearInterval(t); try { Howler._howls.forEach(function (s) { s.fade(s.volume(), 0, 600); }); } catch (e) {} FLOW.done(); } } catch (e) {} }, 100); }
   var dove = false;   /* (the card waits for the dive itself to play: a joined take can report 'end' as it comes up) */
-  var t = setInterval(function () { try { var A = window.jjStory.api, c = (typeof A === 'function' ? A() : A).comp(); var W = window.jjStory2 && window.jjStory2.whole && window.jjStory2.whole(); if (W && W.id === '5B.5' && W.state === 'action') dove = true; if ((dove && W && W.id === '5B.5' && W.state === 'end') || /^s2_(6|7|8|9)/.test(c)) { clearInterval(t); card(); } } catch (e) {} }, 100);
+  var t = setInterval(function () { try { var A = window.jjStory.api, c = (typeof A === 'function' ? A() : A).comp(); if (UNTIL) return; var W = window.jjStory2 && window.jjStory2.whole && window.jjStory2.whole(); if (W && W.id === '5B.5' && W.state === 'action') dove = true; if ((dove && W && W.id === '5B.5' && W.state === 'end') || /^s2_(6|7|8|9)/.test(c)) { clearInterval(t); card(); } } catch (e) {} }, 100);
   var u = setInterval(function () { var L = window.JJLoader; if (!L || !L.start || L.start._jjd) { if (L && L.start && L.start._jjd) clearInterval(u); return; } clearInterval(u); jjdLoader(); }, 20);
 })();
 </script>
