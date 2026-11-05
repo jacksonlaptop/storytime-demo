@@ -26,7 +26,7 @@ var FLOW = (function () {
 })();</script>
 <script>/* demo: the repo's scripts and art come from one place. jsDelivr refuses this repo (over its 50 MB package limit: only files it cached long ago still load),
    so the share link reads a pinned commit through rawcdn.githack; the local preview (the site proxy, port 3800) reads the staged files */
-var JJD_REF = 'da4859f0e31496bb33813b37cc7083e4b03505c0';
+var JJD_REF = '8edaedc376db6a7bdc212c17b60a3a44dcd6997f';
 var JJD = location.port === '3800' ? '/gh/' : (JJD_REF === 'main' ? 'https://raw.githack.com/jacksonlaptop/joes-journey-code/main/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/' + JJD_REF + '/');
 window.JJ_STORY_BASE = window.JJ_SCORE_BASE = JJD;
 /* (Joe, 4 Nov: 'a very long black screen'): the scripts load one after another before the page can draw, and through githack each took about a second
@@ -346,6 +346,8 @@ function jjdLoader() { var L = window.JJLoader; if (!L || !L.start || L.start._j
   /* (Joe, 5 Nov) the flow plays Scene 1 from this page too (?until=2.1): it hands on to the next part as the story reaches that shot, with no card */
   var UNTIL = (/[?&]until=([0-9.]+)/.exec(location.search) || [])[1];
   if (UNTIL) { var ut = setInterval(function () { try { var A = window.jjStory.api, c = (typeof A === 'function' ? A() : A).comp(); if (c.indexOf('s2_' + UNTIL) === 0) { clearInterval(ut); clearInterval(t); var bk = document.createElement('div'); bk.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#04060b;'; document.body.appendChild(bk);   /* (Joe, 5 Nov: 'why is it old joe style'): black at once, so the old cartoon Scene 2 in storytime2.js never shows while the next part loads */
+    var pos = -1; try { Howler._howls.forEach(function (h) { if (/music-wasteland/.test(String(h._src)) && h.playing()) pos = h.seek(); }); } catch (e) {}   /* (Joe, 5 Nov: 'you can tell it restarts, why not just let it play'): the wasteland track carries on into Scene 2's page from where it is: the flow page's copy starts at the same point and Scene 2 keeps the one already playing */
+    if (pos >= 0) try { var fa = parent.jjFlowMusic(new URL('../scene1/music.mp3', location.href).href); fa.volume = .32; fa.currentTime = pos; var fp = fa.play(); if (fp && fp.catch) fp.catch(function () {}); } catch (e) {}
     var P = document.getElementById('jjst-pause'); if (P && !document.getElementById('jjst').classList.contains('user-paused')) try { P.click(); } catch (e) {} try { Howler._howls.forEach(function (s) { s.fade(s.volume(), 0, 400); }); } catch (e) {} document.querySelectorAll('video').forEach(function (v) { try { v.pause(); } catch (e) {} }); FLOW.done(); } } catch (e) {} }, 40); }
   var dove = false;   /* (the card waits for the dive itself to play: a joined take can report 'end' as it comes up) */
   var t = setInterval(function () { try { var A = window.jjStory.api, c = (typeof A === 'function' ? A() : A).comp(); if (UNTIL) return; var W = window.jjStory2 && window.jjStory2.whole && window.jjStory2.whole(); if (W && W.id === '5B.5' && W.state === 'action') dove = true; if ((dove && W && W.id === '5B.5' && W.state === 'end') || /^s2_(6|7|8|9)/.test(c)) { clearInterval(t); card(); } } catch (e) {} }, 100);
