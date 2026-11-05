@@ -67,7 +67,7 @@ iframe.on{opacity:1;pointer-events:auto;}
 </script>
 <script>
 (function () {
-  var V = 20, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
+  var V = 21, PARTS = ['../journey/', '../scene1/', '../scene2/', '../scene3/'];
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
   var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
@@ -103,7 +103,7 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!SCN) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/ebdc5c4a3a86de1d892d08f038ec7e1c99399531/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/a31e3af23eb378c0e927613024bc6146435714a9/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
     { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['From the start', null, '../scene1/plate-c.jpg']] },
     { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
