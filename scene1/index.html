@@ -27,6 +27,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 .cam{position:absolute;inset:0;transform-origin:0 0;transition:transform 1.3s cubic-bezier(.45,0,.25,1);}
 .cam.out{transition:transform .8s ease;}
 #joe{position:absolute;left:30.94%;top:26.56%;width:17.62%;opacity:0;transition:opacity .4s ease;transform-origin:50% 96%;will-change:transform;z-index:2;}
+#tj,#tg{z-index:1;}   /* the talk loops sit over the animated sky (it paints the whole plate) and under the cut-outs, which hide while a loop is up */
 #grik{position:absolute;left:52.75%;top:31.44%;width:12.81%;opacity:0;transition:opacity .4s ease;will-change:transform;z-index:3;}
 .sm{position:absolute;top:10px;right:10px;z-index:20;font-size:13px;}
 .snd{display:flex;align-items:center;gap:7px;font:inherit;color:#fff;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:5px 12px 5px 9px;cursor:pointer;margin-left:auto;transition:background .2s ease;}
@@ -98,7 +99,7 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 <div class="top">Storytime 2 · Scene 1 · painted test</div>
 <div class="stage">
   <div class="pw"><div class="pane" id="pane">
-    <div class="cam" id="cam"><img class="plate on" id="pa" src="plate-a.jpg" alt=""><img class="plate" id="pb" src="plate-b.jpg" alt=""><canvas id="skyp"></canvas><img id="joe" src="joe.png" alt=""><img id="grik" src="grik.png" alt=""><img id="castle" src="castle-haze.webp" alt=""><div id="gp"></div></div>
+    <div class="cam" id="cam"><img class="plate on" id="pa" src="plate-a.jpg" alt=""><img class="plate" id="pb" src="plate-b.jpg" alt=""><video class="plate" id="tj" src="talk-joe.mp4" muted loop playsinline preload="auto"></video><video class="plate" id="tg" src="talk-grik.mp4" muted loop playsinline preload="auto"></video><canvas id="skyp"></canvas><img id="joe" src="joe.png" alt=""><img id="grik" src="grik.png" alt=""><img id="castle" src="castle-haze.webp" alt=""><div id="gp"></div></div>
     <video id="c1" src="c1.mp4" muted playsinline preload="auto"></video><video id="c2" src="c2.mp4" muted playsinline preload="auto"></video><video id="c3" src="c3.mp4" muted playsinline preload="auto"></video><canvas id="skyc"></canvas>
     <canvas id="ash"></canvas><div id="dim"></div><video id="mem" src="memory.mp4" muted playsinline preload="auto"></video>
     <div class="bub" id="bub"><i class="bface"></i><b></b><span></span></div>
@@ -232,6 +233,13 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
   var POSES = { hand: [507, 567, .51, .26], cross: [445, 561, .59, .26], thumb: [509, 565, .54, .28], shrug: [490, 559, .54, .26], point: [550, 555, .51, .28], wave: [499, 547, .53, .27] };
   Object.keys(POSES).forEach(function (n) { var p = POSES[n], w = p[0] * .4 / 1600, h = p[1] * .4 / 900, im = new Image(); im.src = 'grik-' + n + '.webp'; im.alt = ''; im.dataset.p = n;
     im.style.width = (w * 100) + '%'; im.style.left = ((.583 - p[2] * w) * 100) + '%'; im.style.top = ((.375 - p[3] * h) * 100) + '%'; gp.appendChild(im); });
+  /* the talk loops (Joe, 5 Nov: S1-7, S1-8): plate C with one of them talking, the other listening; over the plate while that one has the line
+     (Grik's gesture poses keep their cut-outs: the loop is for Joe's lines and Grik's plain ones). The cut-outs hide once a loop is up. */
+  var tj = $('tj'), tg = $('tg'), talking = null, talkT = 0;
+  function talk(k) { if (talking === k) return; talking = k; clearTimeout(talkT);
+    [[tj, 'Joe'], [tg, 'Grik']].forEach(function (p) { var v = p[0]; if (p[1] === k) { play(v); show(v, 1); } else if (v.classList.contains('on')) { show(v, 0); setTimeout(function () { if (!v.classList.contains('on')) v.pause(); }, 450); } });
+    if (k) talkT = setTimeout(function () { [joe, grik, gp].forEach(function (e) { e.style.visibility = 'hidden'; }); }, 420);
+    else [joe, grik, gp].forEach(function (e) { e.style.visibility = ''; }); }
   function pose(n) { var plate = n === 'plate'; show(grik, plate); show(gp, !plate); [].forEach.call(gp.children, function (im) { show(im, im.dataset.p === n); }); }
 
   function memory() { show(dim, 1); show(mem, 1); play(mem); sfx('memory', .9); music.volume = .15 * PREF.music; }
@@ -253,9 +261,10 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
   var ANSWER = [{ w: 'Grik', t: 'Through that old thing? It hasn’t worked in years.', id: 's1-06c-grik', pose: 'shrug', cam: 'wide' },
     { w: 'Grik', t: 'Straight to the gossip, eh?', id: 's1-06d-grik', pose: 'hand', cam: 'grik' }];
   var li = -1, lineT = 0, choosing = false, asked = true, then = null;
-  function ask() { if (asked) return; asked = true; clearInterval(typeT); speaking = null; speaker('Joe'); txt.textContent = ''; choosing = true; show(ch, 1); }
+  function ask() { if (asked) return; asked = true; talk(null); clearInterval(typeT); speaking = null; speaker('Joe'); txt.textContent = ''; choosing = true; show(ch, 1); }
   function say(L, after) { clearTimeout(lineT);
     if (L.cam) shot(L.cam); if (L.pose) pose(L.pose);
+    talk(L.w === 'Joe' ? 'Joe' : L.w === 'Grik' && (!L.pose || L.pose === 'plate' || L.pose === 'hand') ? 'Grik' : null);
     if (!L.w) { lineT = setTimeout(after, L.ms); return; }
     type(L.w, L.t, L.alien, L.id, L.join); if (L.choose) nxOff(); else nxOn(L.ms || 1500 + L.t.length * 48);
     if (L.cue) { var at = Math.max(0, L.t.indexOf(L.cue[0])); later(L.cue[1], at * 34); }
@@ -269,14 +278,14 @@ body{display:flex;flex-direction:column;height:100vh;height:100svh;overflow:hidd
 
   function talkIn() { show(pa, 1); show(pb, 0); show(joe, 1); pose('plate'); show(ash, 1); setTimeout(function () { show(c2, 0); }, 80);   // plate A under the two cut-outs, so they can move
     shot('full', .01); nextLine(); }
-  function leave() { nxOff(); speaking = null; show(castle, 0); pose('plate'); shot('full', .8);
+  function leave() { nxOff(); speaking = null; talk(null); show(castle, 0); pose('plate'); shot('full', .8);
     setTimeout(function () { show(c3, 1); play(c3); show(ash, 0); later(function () { sfx('whoosh', .55); }, 1500); setTimeout(function () { show(grik, 0); show(gp, 0); show(joe, 0); show(pa, 0); show(pb, 1); }, 150);
       later(function () { type('Joe', 'Uh...I’m Joe.', 0, 's1-12-joe'); }, 2200); }, 850); }
   c3.addEventListener('ended', function () { show(ash, 1); setTimeout(function () { show(c3, 0); }, 60); type('Narrator', 'But Grik was gone before Joe could get the words out.', 0, 's1-13-narrator'); later(end, 4200); });
   function end() { if (window.jjKit && jjKit.flow) { nxOff && nxOff(); jjKit.done(); return; }   /* the one flow: no end card, the next scene follows */
     nxOff(); speaker('Narrator'); txt.textContent = 'End of Scene 1. Next: Scene 2, the ash desert.'; cover.querySelector('span').textContent = 'Play again'; $('next2').hidden = false; later(function () { cover.classList.remove('off'); music.pause(); }, 1500); }
 
-  function start() { run++; timers.forEach(clearTimeout); timers = []; clearTimeout(lineT); li = -1; speaking = null; cover.classList.add('off'); show(bub, 0); show(ring, 0); show(tap, 0); show(grik, 0); show(joe, 0); show(ash, 0); nxOff();
+  function start() { run++; timers.forEach(clearTimeout); timers = []; talk(null); clearTimeout(lineT); li = -1; speaking = null; cover.classList.add('off'); show(bub, 0); show(ring, 0); show(tap, 0); show(grik, 0); show(joe, 0); show(ash, 0); nxOff();
     choosing = false; asked = true; then = null; show(ch, 0); show(castle, 0); show(gp, 0); show(mem, 0); show(dim, 0); mem.pause(); shot('full', .01); show(pa, 1); show(pb, 0); show(c2, 0); show(c3, 0); txt.textContent = ''; speaker('Narrator');
     if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
     if (soundOn) { if (music.paused) { try { music.currentTime = 0; } catch (e) {} }   /* (already playing: from the scene before, in the one flow) */ var p = music.play(); if (p && p.catch) p.catch(function () {}); }
