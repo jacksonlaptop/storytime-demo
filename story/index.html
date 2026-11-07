@@ -67,7 +67,7 @@ iframe.on{opacity:1;pointer-events:auto;}
 </script>
 <script>
 (function () {
-  var V = 27, PARTS = ['../journey/', '../scene3/', '../scene2/', '../scene3/'], PEX = { 1: 'until=2.1' };   /* (Joe, 5 Nov: one source of truth): Scene 1 is storytime2.js too (the scene3/ page from line 0, handing on at 2.1); Scene 2 is still its own page until it moves in */
+  var V = 28, PARTS = ['../journey/', '../scene3/', '../scene2/', '../scene3/'], PEX = { 1: 'until=2.1' };   /* (Joe, 5 Nov: one source of truth): Scene 1 is storytime2.js too (the scene3/ page from line 0, handing on at 2.1); Scene 2 is still its own page until it moves in */
   var cur = null, nxt = null, at = -1, want = false;
   /* (checking: ?from=N starts at part N; anything else in the address goes to that first part, e.g. ?from=0&scene=9 for the end of Part One) */
   var q = new URLSearchParams(location.search), FROM = Math.min(PARTS.length - 1, +q.get('from') || 0); q.delete('from'); var SCN = q.get('scenes') !== '0'; q.delete('scenes'); var GATE = q.get('gate') === '1'; q.delete('gate');   /* (?gate=1 shows Click to begin even where the browser would play straight away: for checking) */ var EXTRA = q.toString();   // (scenes=1 is this page's picker: not passed on, or the part shows its own as well)
@@ -103,7 +103,7 @@ iframe.on{opacity:1;pointer-events:auto;}
      scene, a picture per shot; a press plays from there (its part loaded in place of this one, or a jump inside the part already playing). It hides under
      the sound question. Scenes 3 to 5: [shot, its first line in storytime2.js's beats, poster] (re-read them from jjStory2.beats when the script changes) */
   if (!SCN) return;
-  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/8edaedc376db6a7bdc212c17b60a3a44dcd6997f/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
+  var GH = location.port === '3800' ? '/gh/' : 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/a486caa5f7b6cc56be13d54a6a84d51f6a081edf/',   /* (the same pinned commit as the parts' JJD_REF) */ P = function (id) { return GH + 'story2-whole-' + id + '-ns-s-poster.webp'; };
   var PICK = [{ n: 'Part One', head: 'Part One: the tale of Trogdor and Joe the Righteous', part: 0, shots: [['The cave', 0, GH + 'story-cav-bg.webp'], ['The village', 2, GH + 'story-vil-bg.webp'], ['The tavern', 4, GH + 'story-tav-bg.webp'], ['The ride and the forest', 5, GH + 'story-forest-bg.webp'], ['The castle', 11, GH + 'story-cas-bg.webp']] },   /* (Part One's lines: api.lines() in storytime.js s150) */
     { n: 'Scene 1', grp: 'Part Two', head: 'Part Two, Scene 1: the portal wasteland', part: 1, shots: [['1.1', 0, P('1_1')], ['1.2', 3, P('1_2')], ['1.3', 5, P('1_3')], ['1.4', 18, P('1_4')]] },
     { n: 'Scene 2', head: 'Part Two, Scene 2: the ash desert', part: 2, shots: [['From the start', null, '../scene2/plate-sign.jpg']] },
