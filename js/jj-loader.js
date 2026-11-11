@@ -76,8 +76,10 @@ if (!window.jjClipSrc) window.jjClipSrc = (function () { var hevc = null; return
    ============================================================================ */
 (function () {
   var JJ = (window.JJLoader = window.JJLoader || {});
-  JJ.version = 'L23 · the system pointer shows until the drawn cursor is live (never a moment without one) · L22 · the story never stands still at the start: it eases up to 12% by itself while the first bytes are awaited · L21 · the early sound moon starts quiet (light moon, resting bars) unless the stored state is muted; muted and quiet no longer share a look; L20 · the sound moon is drawn here, at first paint, and pinned above every loader / overlay / curtain (site-footer adopts it); L19 · pill: deep blur fade (F 125, runs into the bleed) and the title kept by its own letters, not a box — no straight line above the scene; L18 · pill art bleeds past its edge: no hard line round any pill; L17 · pill loaders: deep feather, hint as a subtitle; L16 · precam moon behind the grass; L15 pill variant (Storytime fight, My Story evolution)';   // bump every edit — verify in console
+  JJ.version = 'L24 · the four picture levels: in Lite and Ultra lite the loader shows its figure as a still, not a clip inside the drawing (the loader comes before the site sets the level, so it reads the remembered one) · L23 · the system pointer shows until the drawn cursor is live (never a moment without one) · L22 · the story never stands still at the start: it eases up to 12% by itself while the first bytes are awaited · L21 · the early sound moon starts quiet (light moon, resting bars) unless the stored state is muted; muted and quiet no longer share a look; L20 · the sound moon is drawn here, at first paint, and pinned above every loader / overlay / curtain (site-footer adopts it); L19 · pill: deep blur fade (F 125, runs into the bleed) and the title kept by its own letters, not a box — no straight line above the scene; L18 · pill art bleeds past its edge: no hard line round any pill; L17 · pill loaders: deep feather, hint as a subtitle; L16 · precam moon behind the grass; L15 pill variant (Storytime fight, My Story evolution)';   // bump every edit — verify in console
   window.JJ_LOADER_BUILD = JJ.version;
+  function qLevel() { try { if (window.jjQuality) return window.jjQuality.level; var m = /[?&]jjq=(\d|ultra|lite|medium|full)\b/.exec(location.search); if (m) return /\d/.test(m[1]) ? +m[1] : ['ultra', 'lite', 'medium', 'full'].indexOf(m[1]); if (/[?&]jjlite=1\b/.test(location.search)) return 1;
+    var v = localStorage.getItem('jjQuality'); if (v == null) v = sessionStorage.getItem('jjQAuto'); return v != null && /^[0-3]$/.test(v) ? +v : 3; } catch (e) { return 3; } }   /* L24: the visitor's level, or the one picked earlier this visit; a first page waits for site-footer's preset */
   try { console.log('%c[JJ] jj-loader.js build: ' + JJ.version, 'color:#FF00F5;font-weight:bold'); } catch (e) {}
 
   /* ---------- 1. MEASURE: true byte progress of a known asset set ---------- */
@@ -170,7 +172,7 @@ if (!window.jjClipSrc) window.jjClipSrc = (function () { var hevc = null; return
       '<path d="' + foamD + '" fill="none" stroke="' + foam + '" stroke-width="4.5" stroke-linecap="round" opacity="' + (foamOp || 1) + '"/>' + curls + '</g>';
   }
 
-  var LOADER_BASE = window.JJ_LOADER_BASE || window.JJ_SCORE_BASE || 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/';
+  var LOADER_BASE = window.JJ_LOADER_BASE || window.JJ_SCORE_BASE || 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/';
 
   /* The night dressing is the same handful of files on every loader and it gates the reveal,
      so ask for it the moment this script parses rather than when a loader is started. */
@@ -398,7 +400,7 @@ if (!window.jjClipSrc) window.jjClipSrc = (function () { var hevc = null; return
         '</g></g>';
     }
     /* the landing loader's night dressing: grass line, moon window, sound-on message */
-    var GRASS = opts.grass || 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/loader-grass.webp';
+    var GRASS = opts.grass || 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/loader-grass.webp';
     var MSG1 = opts.msg1 || 'Please keep the sound on,';
     var MSG2 = opts.msg2 || 'This is an audio enhanced journey\u2026';
     var GRW = 1160, GRH = Math.round(627 / 2508 * 1160);
@@ -631,10 +633,10 @@ if (!window.jjClipSrc) window.jjClipSrc = (function () { var hevc = null; return
   /* ---------- VARIANT F — Joe vs Trogdor (storytime) — the keyed Seedance fight when it lands, the still plate until then ---------- */
   function Fight(opts) {
     var MSG1 = opts.msg1 || 'Please keep the sound on,', MSG2 = opts.msg2 || 'This is an audio enhanced journey\u2026';
-    var GRASS = opts.grass || 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/loader-grass.webp';
+    var GRASS = opts.grass || 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/loader-grass.webp';
     var GROUND = 243, GRW = 1160, GRH = Math.round(627 / 2508 * 1160), GRTOP = GROUND - Math.round(165 / 627 * GRH);
     var FH = opts.figH || 158, AR = opts.figAR || (908 / 471), FW = Math.round(FH * AR), FX = 500 - FW / 2, FY = GROUND + 6 - FH;
-    var clip = opts.clip || null;
+    var clip = qLevel() <= 1 ? null : (opts.clip || null);   /* L24: Lite and below: the still */
     [GRASS, NIGHT_MOON].forEach(function (u) { var im = new Image(); im.src = u; });
     var el = mount(
       '<svg viewBox="0 0 1000 320">' + DEFS +
@@ -937,7 +939,7 @@ if (!window.jjClipSrc) window.jjClipSrc = (function () { var hevc = null; return
     var POS = [[557, 973], [812, 963], [1066, 939], [1321, 931], [1576, 925], [1830, 909], [2085, 909]], S = 239;
     var N = 0, figs = [];
     if (ST) {
-      var clip = opts.clip || null, FX = 1180, FY = 791, FW = 621, FH = 360;   // the pair stands where Joe drew the knight and Trogdor
+      var clip = qLevel() <= 1 ? null : (opts.clip || null), FX = 1180, FY = 791, FW = 621, FH = 360;   // the pair stands where Joe drew the knight and Trogdor
       html +=
         '<text x="1440" y="712" text-anchor="middle" fill="rgba(255,255,255,.88)" style="font-size:40px">' + esc(opts.msg1 || 'Hint: This is an interactive story') + '</text>' +   // a subtitle under the title
         '<ellipse cx="1490" cy="1150" rx="250" ry="16" fill="rgba(0,0,0,.28)"/>' +

@@ -1,5 +1,5 @@
 /* BUILD f-1008a (2026-10-08) · performance round 2: one lenis.raf per frame (it was stepped twice, the wrong way and back); the modal guard's nav rule no longer re-styles the whole page. f-1007a · loading: the site's music is streamed and only created when it is first played (it was an 8.6 MB download and a full decode on every page load); the menu's card art loads when the menu is first reached for; the starfield can fetch three.js itself. */
-window.JJ_FOOTER_BUILD = 'f-1025a';   // f-1025a: window.jjSoundOff (one-press mute for Storytime's transport) ·   // f-1021a: with the menu open, the first-achievement card and the Part Two offer take clicks only while they are SHOWING (.on); hidden, they lay over the whole page and swallowed every click and hover in the menu
+window.JJ_FOOTER_BUILD = 'f-1107a';   // f-1107a: picture quality in four levels (Ultra lite, Lite, Medium, Full power), preset on landing, a Picture slider in the moon mixer ·   // f-1025a: window.jjSoundOff (one-press mute for Storytime's transport) ·   // f-1021a: with the menu open, the first-achievement card and the Part Two offer take clicks only while they are SHOWING (.on); hidden, they lay over the whole page and swallowed every click and hover in the menu
 /* THE SOUND MOON, FROM THE FIRST PAINT (Joe, 2026-09-30: "the sound button should always be there, and it should still work and expand...
    no matter what, between pages etc"). The same function lives in jj-loader.js (the first of the site's scripts on every page, so the
    moon is drawn in the same frame as the loader) and in site-footer.js (in case a page has no loader). It draws the moon in its resting
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
     moon.src = 'data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27%3E%3Cdefs%3E%3CradialGradient id=%27o%27%3E%3Cstop offset=%27.52%27 stop-color=%27%23c8d8ff%27 stop-opacity=%27.22%27/%3E%3Cstop offset=%27.78%27 stop-color=%27%23a8c0ff%27 stop-opacity=%27.09%27/%3E%3Cstop offset=%271%27 stop-color=%27%2393aaff%27 stop-opacity=%270%27/%3E%3C/radialGradient%3E%3CradialGradient id=%27i%27%3E%3Cstop offset=%27.42%27 stop-color=%27%23ffffff%27 stop-opacity=%27.5%27/%3E%3Cstop offset=%27.74%27 stop-color=%27%23dbe7ff%27 stop-opacity=%27.3%27/%3E%3Cstop offset=%271%27 stop-color=%27%23c3d4ff%27 stop-opacity=%270%27/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%27100%27 fill=%27url(%23o)%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%2772%27 fill=%27url(%23i)%27/%3E%3Ccircle cx=%27100%27 cy=%27100%27 r=%2746%27 fill=%27%23ffffff%27/%3E%3Cellipse cx=%2785%27 cy=%2782%27 rx=%278%27 ry=%277%27 fill=%27%23e6e6ee%27/%3E%3Cellipse cx=%27114%27 cy=%2796%27 rx=%276%27 ry=%275.5%27 fill=%27%23e6e6ee%27/%3E%3Cellipse cx=%2796%27 cy=%27118%27 rx=%279%27 ry=%277.5%27 fill=%27%23e6e6ee%27/%3E%3Cellipse cx=%2776%27 cy=%27107%27 rx=%274.5%27 ry=%274%27 fill=%27%23e6e6ee%27/%3E%3C/svg%3E';
     wrap.appendChild(moon);                                        // the moon itself, over the art and under the links
     var meta = document.createElement('div'); meta.id = 'jj-menu-meta';
-    meta.innerHTML = '<div class="jjmm-left"><div class="jjmm-theme">Current theme · <b>Classic</b></div><div class="jjmm-pct"><span class="pa">Achievements <b>0/0</b> · 0%</span><span class="ps">Store <b>0/0</b> · 0%</span></div></div><div class="jjmm-actions"><a href="mailto:jackson.laptop95@gmail.com" aria-label="Email Joe" data-cursor="external"><img src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-mail.webp" alt=""><img class="f" src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-mail-fill.webp" alt=""></a><a href="https://www.linkedin.com/in/joseph-jackson-ui/" target="_blank" rel="noopener" aria-label="Joe on LinkedIn" data-cursor="external"><img src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-linkedin.webp" alt=""><img class="f" src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-linkedin-fill.webp" alt=""></a><a href="/contact" aria-label="Joe on WhatsApp" data-cursor="external"><img src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-phone.webp" alt=""><img class="f" src="https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/icon-phone-fill.webp" alt=""></a></div>';
+    meta.innerHTML = '<div class="jjmm-left"><div class="jjmm-theme">Current theme · <b>Classic</b></div><div class="jjmm-pct"><span class="pa">Achievements <b>0/0</b> · 0%</span><span class="ps">Store <b>0/0</b> · 0%</span></div></div><div class="jjmm-actions"><a href="mailto:jackson.laptop95@gmail.com" aria-label="Email Joe" data-cursor="external"><img src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-mail.webp" alt=""><img class="f" src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-mail-fill.webp" alt=""></a><a href="https://www.linkedin.com/in/joseph-jackson-ui/" target="_blank" rel="noopener" aria-label="Joe on LinkedIn" data-cursor="external"><img src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-linkedin.webp" alt=""><img class="f" src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-linkedin-fill.webp" alt=""></a><a href="/contact" aria-label="Joe on WhatsApp" data-cursor="external"><img src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-phone.webp" alt=""><img class="f" src="https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/icon-phone-fill.webp" alt=""></a></div>';
     wrap.appendChild(meta);
 
     function update() {
@@ -666,7 +666,7 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
     // speech — and reveals only when downloaded + decoded. No loader script = no gate.
     var WF1 = 'https://cdn.prod.website-files.com/6a19b8f4191d4fbca532591e/';
     var WF2 = 'https://cdn.prod.website-files.com/69c2e676c74b81c8dcbd3651/';
-    var GH  = 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/';
+    var GH  = 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/';
     /* HEAVY = only what the LANDING itself needs, so the loader is short. Everything the
        Big Bang and the scenes after "Click to begin" need is in LATER, fetched quietly
        from the moment the landing appears — the visitor is reading the title and waiting
@@ -933,14 +933,14 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
     st.textContent =
       '#jj-mixer{position:fixed;right:32px;bottom:64px;width:64px;height:32px;border-radius:32px;z-index:9998;box-sizing:border-box;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.5);box-shadow:0 18px 50px rgba(0,0,0,.4),0 0 40px rgba(160,190,255,.18);opacity:0;pointer-events:none;overflow:hidden;font-family:"Joes Journey Headline","Quicksand",sans-serif;color:#fff;transform-origin:100% 100%;' +
         'transition:width .62s cubic-bezier(.3,1.5,.5,1),height .62s cubic-bezier(.3,1.5,.5,1) .04s,border-radius .5s ease,opacity .12s ease,background .45s ease;}' +
-      '#jj-mixer.open{width:min(300px,calc(100vw - 48px));height:370px;border-radius:28px 28px 32px 28px;opacity:1;pointer-events:auto;}' +
+      '#jj-mixer.open{width:min(300px,calc(100vw - 48px));height:462px;border-radius:28px 28px 32px 28px;opacity:1;pointer-events:auto;}' +
       /* open, the moon stays put and becomes the close: its bars fold away and an X turns in */
       '#jj-sound-btn .jj-bar{transition:height 60ms linear,background .2s ease,opacity .2s ease;}html.jj-mx-on #jj-sound-btn .jj-bar{opacity:0;}' +
       '#jj-sound-btn .jj-mx-xm{position:absolute;left:50%;top:50%;width:22px;height:22px;translate:-50% -50%;z-index:3;pointer-events:none;opacity:0;rotate:-90deg;scale:.4;color:#111;transition:opacity .2s ease,rotate .45s cubic-bezier(.3,1.5,.5,1),scale .45s cubic-bezier(.3,1.5,.5,1);}' +
       '#jj-sound-btn .jj-mx-xm::before,#jj-sound-btn .jj-mx-xm::after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;border-radius:3px;background:currentColor;rotate:45deg;}#jj-sound-btn .jj-mx-xm::after{rotate:-45deg;}' +
       '#jj-sound-btn.is-muted .jj-mx-xm{color:#fff;}html.jj-mx-on #jj-sound-btn .jj-mx-xm{opacity:1;rotate:0deg;scale:1;}html.jj-mx-on #jj-sound-mist{opacity:0!important;}' +
       '#jj-mixer.closing{transition:width .38s cubic-bezier(.6,0,.4,1),height .34s cubic-bezier(.6,0,.4,1),border-radius .38s ease,opacity .22s ease .16s;}' +
-      '#jj-mixer .mx-in{position:absolute;left:0;top:0;width:min(300px,calc(100vw - 48px));height:370px;box-sizing:border-box;padding:22px 24px 0;}' +
+      '#jj-mixer .mx-in{position:absolute;left:0;top:0;width:min(300px,calc(100vw - 48px));height:462px;box-sizing:border-box;padding:22px 24px 0;}' +
       '#jj-mixer h4{margin:0 0 14px;font-size:20px;font-weight:700;letter-spacing:.02em;line-height:1;}' +
       '#jj-mixer .mx-row{margin-bottom:14px;opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .45s cubic-bezier(.3,1.4,.5,1);}' +
       '#jj-mixer.open .mx-row,#jj-mixer.open h4{opacity:1;transform:none;}' +
@@ -964,8 +964,14 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
       '#jj-mixer.open .mx-all{opacity:1;transform:none;transition-delay:.4s,.4s,0s,0s,0s;}#jj-mixer .mx-all svg{width:17px;height:17px;flex:none;}#jj-mixer .mx-all .sl{display:none;}#jj-mixer .mx-all.off .sl{display:inline;}#jj-mixer .mx-all.off .w{display:none;}' +
       '#jj-mixer .mx-all:hover{background:rgba(255,255,255,.14);scale:1.03;}#jj-mixer .mx-all:active{border-color:#ff5fc8;box-shadow:0 0 0 3px rgba(255,95,200,.35);scale:.97;}#jj-mixer .mx-all.off{background:#ff5fc8;border-color:#ff9de2;color:#fff;}#jj-mixer .mx-all:focus-visible{outline:2px solid rgba(255,255,255,.6);outline-offset:2px;}' +
       'html[data-jj-theme="medieval"] #jj-mixer .mx-all:not(.off){border-color:#3a2a12;background:rgba(58,42,18,.08);color:#3a2a12;}html[data-jj-theme="alien"] #jj-mixer .mx-all{border-color:#4fe3ff;box-shadow:0 0 8px rgba(79,227,255,.35);}' +
-      'html[data-jj-theme="retro"] #jj-mixer .mx-all{border-radius:0;border:2px solid #FFD400;box-shadow:3px 3px 0 rgba(0,0,0,.35);}html[data-jj-theme="retro"] #jj-mixer .mx-all:not(.off){background:#0b1e5a;}html[data-jj-theme="retro"] body #jj-mixer.shown .mx-in{height:346px;}' +
+      'html[data-jj-theme="retro"] #jj-mixer .mx-all{border-radius:0;border:2px solid #FFD400;box-shadow:3px 3px 0 rgba(0,0,0,.35);}html[data-jj-theme="retro"] #jj-mixer .mx-all:not(.off){background:#0b1e5a;}html[data-jj-theme="retro"] body #jj-mixer.shown .mx-in{height:438px;}' +
       'html[data-jj-theme="mixed"] #jj-mixer .mx-all{box-shadow:0 0 0 3px #6d6d6d;outline:2px dashed #a8a8a8;outline-offset:2px;}' +
+      /* PICTURE (f-1107a): the four quality levels as one more slider, under Mute all, the game-style settings row */
+      '#jj-mixer .mx-q{position:relative;margin-top:20px;padding-top:18px;opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .45s cubic-bezier(.3,1.4,.5,1);}#jj-mixer.open .mx-q{opacity:1;transform:none;transition-delay:.46s;}' +
+      '#jj-mixer .mx-q::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.35) 30%,rgba(255,255,255,.35) 70%,rgba(255,255,255,0));}' +
+      '#jj-mixer .mx-q .mx-auto{font:inherit;font-size:12px;letter-spacing:.06em;color:inherit;opacity:.7;background:none;border:0;padding:0;cursor:default;}#jj-mixer .mx-q .mx-auto.can{cursor:pointer;text-decoration:underline;text-underline-offset:3px;}#jj-mixer .mx-q .mx-auto.can:hover{opacity:1;}' +
+      '#jj-mixer .mx-q .mx-qin{width:100%;}#jj-mixer .mx-qt{position:relative;display:block;height:16px;margin-top:6px;font-size:11px;line-height:16px;}#jj-mixer .mx-qt i{position:absolute;top:0;font-style:normal;white-space:nowrap;opacity:.55;cursor:pointer;transition:opacity .2s ease;}#jj-mixer .mx-qt i:hover{opacity:.85;}#jj-mixer .mx-qt i.on{opacity:1;font-weight:700;}' +
+      '#jj-mixer .mx-qt i:nth-child(1){left:0;}#jj-mixer .mx-qt i:nth-child(2){left:36%;transform:translateX(-50%);}#jj-mixer .mx-qt i:nth-child(3){left:66%;transform:translateX(-50%);}#jj-mixer .mx-qt i:nth-child(4){right:0;}' +
       /* the bubbles that pop off the moon as it opens */
       '.jj-mx-bub{position:fixed;z-index:9999;width:var(--s);height:var(--s);border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(199,231,255,.55) 45%,rgba(199,231,255,0) 72%);animation:jjMxBub var(--d) cubic-bezier(.2,.8,.3,1) forwards;}' +
       '@keyframes jjMxBub{0%{transform:translate(0,0) scale(.3);opacity:0;}18%{opacity:1;}100%{transform:translate(var(--x),var(--y)) scale(1);opacity:0;}}' +
@@ -973,11 +979,12 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
       /* (closed, the moon says what the mixer says: dark with dots only when muted; sound on but nothing playing = the light moon, bars at rest: see the early style) */
       '';
     document.head.appendChild(st);
-    var p = document.createElement('div'); p.id = 'jj-mixer'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Sound');
+    var p = document.createElement('div'); p.id = 'jj-mixer'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Sound and picture');
     p.innerHTML = '<div class="mx-in"><h4>Sound</h4>' +
       [['voice', 'Voice'], ['sfx', 'Sound effects'], ['music', 'Music']].map(function (r) {
         return '<label class="mx-row"><span class="mx-lab"><b>' + r[1] + '</b><span data-v="' + r[0] + '"></span></span><span class="mx-line"><button type="button" class="mx-mu" data-m="' + r[0] + '" data-cursor="hover" aria-label="Mute ' + r[1].toLowerCase() + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="sl" d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><input type="range" min="0" max="100" step="1" data-k="' + r[0] + '" aria-label="' + r[1] + ' volume"></span></label>'; }).join('') +
       '<button type="button" class="mx-all" data-cursor="hover" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="sl" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Mute all</span></button>' +
+      '<div class="mx-q"><span class="mx-lab"><b>Picture</b><button type="button" class="mx-auto" data-cursor="hover"></button></span><input type="range" min="0" max="3" step="1" class="mx-qin" aria-label="Picture quality" data-cursor="hover"><span class="mx-qt"><i data-l="0">Ultra lite</i><i data-l="1">Lite</i><i data-l="2">Medium</i><i data-l="3">Full power</i></span></div>' +
       '</div>';
     document.body.appendChild(p);
     var mixPrev = jjMixPrev;
@@ -990,7 +997,12 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
       jjMixPaint(); });                               /* each group's own mute: remembers the level to come back to */
     p.querySelectorAll('.mx-mu').forEach(function (mb) { mb.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); var k = mb.getAttribute('data-m');
       if (JJ_MIX[k] > 0) { mixPrev[k] = JJ_MIX[k]; jjMixSet(k, 0); } else { if (jjUserMuted) jjSetMuted(false); jjMixSet(k, mixPrev[k] || 1); } jjMixPaint(); }); });
-    p.querySelectorAll('input[type=range]').forEach(function (inp) {
+    var qin = p.querySelector('.mx-qin'), qPick = function (lv) { if (window.jjQuality) window.jjQuality.set(lv); jjMixPaint(); };   /* Picture: a level picked here is the visitor's, remembered on this device */
+    qin.addEventListener('input', function () { qPick(+qin.value); });
+    p.querySelectorAll('.mx-qt i').forEach(function (t) { t.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); qPick(+t.getAttribute('data-l')); }); });
+    p.querySelector('.mx-auto').addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); if (window.jjQuality && window.jjQuality.user) { window.jjQuality.auto(); jjMixPaint(); } });
+    window.addEventListener('jj:quality', function () { jjMixPaint(); });
+    p.querySelectorAll('.mx-row input[type=range]').forEach(function (inp) {
       inp.addEventListener('input', function () { var k = inp.getAttribute('data-k'), v = inp.value / 100; if (jjUserMuted && v > 0) jjSetMuted(false); jjMixSet(k, v); jjMixPaint(); });
     });
     var leaveT = 0;                                       /* hover away and it folds back into the moon */
@@ -1011,7 +1023,9 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
   }
   function jjMixPaint() {
     if (!jjMixP) return;
-    jjMixP.querySelectorAll('input[type=range]').forEach(function (inp) { var k = inp.getAttribute('data-k'), v = Math.round(JJ_MIX[k] * 100);
+    var Qq = window.jjQuality, qin = jjMixP.querySelector('.mx-qin'); if (Qq && qin) { var lv = Qq.level; if (document.activeElement !== qin) qin.value = lv; qin.style.setProperty('--v', (lv / 3 * 100).toFixed(1) + '%'); qin.setAttribute('aria-valuetext', Qq.name);
+      jjMixP.querySelectorAll('.mx-qt i').forEach(function (t) { t.classList.toggle('on', +t.getAttribute('data-l') === lv); }); var au = jjMixP.querySelector('.mx-auto'); au.textContent = Qq.user ? 'Back to auto' : 'Auto'; au.classList.toggle('can', !!Qq.user); au.disabled = !Qq.user; }
+    jjMixP.querySelectorAll('.mx-row input[type=range]').forEach(function (inp) { var k = inp.getAttribute('data-k'), v = Math.round(JJ_MIX[k] * 100);
       if (document.activeElement !== inp) inp.value = v; inp.style.setProperty('--v', v + '%'); jjMixP.querySelector('[data-v="' + k + '"]').textContent = v + '%'; var mb = jjMixP.querySelector('.mx-mu[data-m="' + k + '"]'); if (mb) { mb.classList.toggle('off', v === 0); mb.setAttribute('aria-pressed', v === 0 ? 'true' : 'false'); } });
     var all = jjMixP.querySelector('.mx-all'); if (all) { var silent = ['voice', 'sfx', 'music'].every(function (k) { return !(JJ_MIX[k] > 0); }); all.classList.toggle('off', silent); all.setAttribute('aria-pressed', silent ? 'true' : 'false'); all.querySelector('span').textContent = silent ? 'Unmute all' : 'Mute all'; }
   }
@@ -1056,7 +1070,7 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
   /* NARRATION: window.jjSay('my-way') plays nar-my-way.mp3 once per page. Silent when muted, never on top of another line,
      and the ambient ducks under the voice. opt.delay waits first; opt.wait queues it behind a line already playing; opt.again lets a line repeat. */
   (function () {
-    var said = {}, cur = null, NB = window.JJ_SCORE_BASE || 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/';
+    var said = {}, cur = null, NB = window.JJ_SCORE_BASE || 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/';
     var NAR_GAIN = 0.45;   /* Jim’s narration sits at 45% of its old level (Joe, 2026-09-30: 60%, then "still loud"); the Voice slider still scales it */
     window.jjSay = function (name, opt) { opt = opt || {};
       if (opt.delay) { var d = opt.delay; opt.delay = 0; setTimeout(function () { window.jjSay(name, opt); }, d); return; }
@@ -1199,7 +1213,7 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
    pull, staggered entrance + scramble sweep when the menu opens, and a peeking
    alien. The Menu/Close button hover embed is left untouched. */
 (function () {
-  var GH = window.JJ_SCORE_BASE || 'https://cdn.jsdelivr.net/gh/jacksonlaptop/joes-journey-code@main/';   // JJ_SCORE_BASE: the local preview serves the staged art
+  var GH = window.JJ_SCORE_BASE || 'https://rawcdn.githack.com/jacksonlaptop/joes-journey-code/f08d0cf8afdb608d6c2268ff6da768d3315c5b89/';   // JJ_SCORE_BASE: the local preview serves the staged art
   var IMGS = {                                     // the user's menu art (jj-menu-*.png, keyed to menu-*.webp)
     'home': GH + 'menu-home.webp',
     'work': GH + 'menu-work.webp',
@@ -1525,38 +1539,75 @@ if (flyRiveEl) { flyRiveEl.style.display = 'block'; flyRiveEl.style.opacity = '1
       var tg = e.target; if (tg && tg.closest && tg.closest('.nav') && !tg.closest('#jj-ach,#jj-first,.jj-tmenu.stp,.jj-tmenu.thp')) { e.stopImmediatePropagation(); e.preventDefault(); } }, true); });
 })();
 
-/* ---- f-1012c · THE LITE LEVEL (the first quality tier). Joe's Intel Mac (UHD 630 driving 1680 x 842 at 2x) ran the homepage at 20 to 26 frames a second with its
-   scripts idle: the graphics chip could not fill the screen fast enough, and no single effect was to blame. So a machine that is measured to be slow gets a lighter
-   picture, and a fast one keeps everything.
-   ON when: the address says ?jjlite=1; or an earlier page of this visit turned it on; or the page is MEASURED slow: once the loader has gone and the visitor has
-   moved the pointer, 3 s of frames under 38 a second (with no pointer at all, after 10 s: under 24). ?jjlite=0 keeps it off.
-   What it does here: html.jj-lite (every script can hang its own lighter rules off that; 'jj:lite' is sent on window); no glass blur; no blurred mist behind the
-   sound button; no blurred cursor trail; and every big Rive canvas is drawn at 1x, a quarter of the pixels (the small logo stays sharp). ---- */
+/* ---- f-1107a · PICTURE QUALITY: FOUR LEVELS (Joe, 7 Nov: "ultralite, lite, medium, full power ... like you do in games", "we will preset it to when they land").
+   One site-wide level, 0 Ultra lite · 1 Lite · 2 Medium · 3 Full power. It replaces the one lite switch (f-1012c), which is kept as window.jjLite (on = Lite or lower)
+   so every older script keeps working.
+   PRESET ON LANDING: the first page of a visit picks a level from what the machine says (a software renderer = Ultra lite; Intel graphics on a Mac, or a phone-sized
+   touch screen = Lite; four cores or 4 GB or less = Medium; otherwise Full power), then MEASURES once the loader has gone and the pointer moves: a 3 s look under
+   38 frames a second steps down one level, under 24 two, and it looks again after each step (two fine looks and it stops). The pick lasts the visit.
+   THE VISITOR'S CHOICE: the Picture slider in the moon mixer. A level picked there is remembered on this device (localStorage jjQuality) and nothing steps it
+   down again. ?jjq=0..3 (or ultra / lite / medium / full) forces a level for one page; ?jjlite=1 = Lite, ?jjlite=0 = Full power.
+   What each level does here: html[data-jj-q] = ultra | lite | medium | full; html.jj-lite at Lite and below (no glass blur, no mist behind the sound button, no
+   cursor trail, big Rive canvases at 1x); html.jj-ultra at Ultra lite. Events: 'jj:quality' {level, name, why, user} on every change, 'jj:lite' {on} when the
+   lite line is crossed. The Storytime scripts read window.jjQuality.level for their own particles, effect layers and canvases. ---- */
 (function () {
-  var de = document.documentElement, q = location.search, forced = /[?&]jjlite=1\b/.test(q) ? 1 : /[?&]jjlite=0\b/.test(q) ? 0 : null, stored = null;
-  try { stored = sessionStorage.getItem('jjLite'); } catch (e) {}
+  var de = document.documentElement, q = location.search, KEYS = ['ultra', 'lite', 'medium', 'full'], NAMES = ['Ultra lite', 'Lite', 'Medium', 'Full power'];
   var st = document.createElement('style'); st.id = 'jj-lite-css';
-  st.textContent = 'html.jj-lite *,html.jj-lite *::before,html.jj-lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}html.jj-lite #jj-sound-mist,html.jj-lite .cursor-trail{display:none!important;}';
+  st.textContent = 'html.jj-lite *,html.jj-lite *::before,html.jj-lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}html.jj-lite #jj-sound-mist,html.jj-lite .cursor-trail{display:none!important;}' +
+    /* f-1107a: shared by every page: .jj-zz = unseen, its animations held; the homepage wand's blurred under-stroke and the Big Bang wizard's glow go in Lite */
+    '.jj-zz,.jj-zz *{animation-play-state:paused!important;}html.jj-lite #jj-spiral .soft{display:none!important;}html.jj-lite .jj-bbwiz{filter:none!important;}';
   (document.head || de).appendChild(st);
+  var Q = window.jjQuality = { level: 3, name: NAMES[3], key: KEYS[3], why: '', user: false, forced: false, names: NAMES, keys: KEYS, fps: null };
+  window.jjLite = { on: false, why: '', fps: null };
   function riveLow() { if (!window.jjLite.on) return; try { var W = window.Webflow && Webflow.require && Webflow.require('rive'); if (!W || !W.getInstance) return; var big = innerWidth * innerHeight * 0.3;
       document.querySelectorAll('canvas').forEach(function (c) { var i = W.getInstance(c.parentElement), r = i && i.rive; if (!r || typeof r.resizeDrawingSurfaceToCanvas !== 'function') return; var w = c.clientWidth, h = c.clientHeight;
         if (w * h < big) return; if (Math.abs(c.width - w) < 3) return; r.resizeDrawingSurfaceToCanvas(1); if (!r.isPlaying && r.drawFrame) { try { r.drawFrame(); } catch (e) {} } }); } catch (e) {} }
-  function set(v, why) { v = !!v; if (window.jjLite.on === v) return; window.jjLite.on = v; window.jjLite.why = why || ''; de.classList.toggle('jj-lite', v); try { sessionStorage.setItem('jjLite', v ? '1' : '0'); } catch (e) {}
-    try { window.dispatchEvent(new CustomEvent('jj:lite', { detail: { on: v, why: why || '' } })); } catch (e) {} if (v) { riveLow(); setTimeout(riveLow, 2000); setTimeout(riveLow, 6000); } }
-  window.jjLite = { on: false, why: '', set: set, fps: null, low: riveLow };
+  function riveFull() { try { var W = window.Webflow && Webflow.require && Webflow.require('rive'); if (!W || !W.getInstance) return; var d = window.devicePixelRatio || 1;
+      document.querySelectorAll('canvas').forEach(function (c) { var i = W.getInstance(c.parentElement), r = i && i.rive; if (!r || typeof r.resizeDrawingSurfaceToCanvas !== 'function') return; if (Math.abs(c.width - c.clientWidth * d) < 3) return; r.resizeDrawingSurfaceToCanvas(); if (!r.isPlaying && r.drawFrame) { try { r.drawFrame(); } catch (e) {} } }); } catch (e) {} }
+  window.jjLite.low = riveLow;
+  function apply(lv, why, user) { lv = Math.max(0, Math.min(3, lv | 0)); var was = Q.level, wasLite = window.jjLite.on, first = !de.hasAttribute('data-jj-q');
+    Q.level = lv; Q.name = NAMES[lv]; Q.key = KEYS[lv]; Q.why = why || ''; Q.user = !!user;
+    de.setAttribute('data-jj-q', KEYS[lv]); de.classList.toggle('jj-ultra', lv === 0); de.classList.toggle('jj-lite', lv <= 1);
+    window.jjLite.on = lv <= 1; window.jjLite.why = Q.why;
+    if (!first && was === lv) return;
+    try { window.dispatchEvent(new CustomEvent('jj:quality', { detail: { level: lv, name: NAMES[lv], why: Q.why, user: Q.user } })); } catch (e) {}
+    if (window.jjLite.on !== wasLite) { try { window.dispatchEvent(new CustomEvent('jj:lite', { detail: { on: window.jjLite.on, why: Q.why } })); } catch (e) {}
+      if (window.jjLite.on) { riveLow(); setTimeout(riveLow, 2000); setTimeout(riveLow, 6000); } else riveFull(); } }
+  /* the visitor picks a level (the mixer's Picture slider): remembered on this device, never stepped down again */
+  Q.set = function (lv, why) { if (Q.forced) Q.forced = false; try { localStorage.setItem('jjQuality', String(lv | 0)); } catch (e) {} apply(lv, why || 'your choice', true); };
+  /* back to the preset: forget the choice and measure again */
+  Q.auto = function () { try { localStorage.removeItem('jjQuality'); sessionStorage.removeItem('jjQAuto'); } catch (e) {} Q.user = false; apply(preset(), 'picked for this device'); watch(); };
+  /* a script that measured trouble (Storytime's watch): one level lower, unless the visitor chose the level or it is forced */
+  Q.down = function (why, steps) { if (Q.user || Q.forced || Q.level === 0) return false; var lv = Math.max(0, Q.level - (steps || 1)); try { sessionStorage.setItem('jjQAuto', String(lv)); } catch (e) {} apply(lv, why); return true; };
+  /* the old switch: on = Lite (or lower if already there), off = Full power */
+  window.jjLite.set = function (v, why) { if (v) { if (Q.level > 1 && !Q.user && !Q.forced) { try { sessionStorage.setItem('jjQAuto', '1'); } catch (e) {} apply(1, why); } } else if (!Q.user) apply(3, why); };
   var rzT = 0; window.addEventListener('resize', function () { clearTimeout(rzT); rzT = setTimeout(riveLow, 500); });   /* Webflow sizes its canvases back to the screen's own density on a resize */
   window.addEventListener('load', function () { setTimeout(riveLow, 1500); });
-  if (forced != null) { set(forced, 'the address'); return; }
-  if (stored === '1') { set(true, 'an earlier page this visit'); return; }
-  if (stored === '0') return;                                          /* measured fine already this visit */
-  var moved = 0, t0 = performance.now(), frames = [], done = false;
-  var onMove = function () { if (!moved) moved = performance.now(); }; window.addEventListener('pointermove', onMove, { passive: true }); window.addEventListener('touchstart', onMove, { passive: true });
-  (function raf(t) { if (done) return; requestAnimationFrame(raf); if (document.hidden || document.getElementById('jjld')) { frames = []; moved = 0; t0 = performance.now(); return; }   /* never while a loader is up or the tab is away */
-    frames.push(t); var now = performance.now(), from = moved ? moved : t0, need = moved ? 3000 : 10000; if (now - from < need) return;
-    var n = 0; for (var i = frames.length - 1; i >= 0 && frames[i] >= now - 3000; i--) n++; var fps = n / 3; window.jjLite.fps = Math.round(fps);
-    if (fps < (moved ? 38 : 24)) { done = true; set(true, 'measured ' + fps.toFixed(0) + ' frames a second'); window.removeEventListener('pointermove', onMove); return; }
-    if (moved && now - moved > 9000) { done = true; try { sessionStorage.setItem('jjLite', '0'); } catch (e) {} window.removeEventListener('pointermove', onMove); return; }   /* two looks with the pointer moving, both fine: this machine keeps everything */
-    if (frames.length > 2000) frames.splice(0, 1000); })(performance.now());
+  function preset() { var lv = 3, why = 'picked for this device';
+    try { var c = document.createElement('canvas'), g = c.getContext('webgl'), dbg = g && g.getExtension('WEBGL_debug_renderer_info'), r = dbg ? String(g.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '') : '';
+      if (g && g.getExtension('WEBGL_lose_context')) g.getExtension('WEBGL_lose_context').loseContext();
+      if (!g || /SwiftShader|llvmpipe|Software|Basic Render/i.test(r)) lv = 0;
+      else if (/Mac/.test(navigator.platform || navigator.userAgent) && /Intel/i.test(r)) lv = 1;
+      Q.gpu = r; } catch (e) {}
+    try { if (lv > 1 && matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 600) lv = 1; } catch (e) {}
+    if (lv > 2 && ((navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (navigator.deviceMemory && navigator.deviceMemory <= 4))) lv = 2;
+    try { sessionStorage.setItem('jjQAuto', String(lv)); } catch (e) {} Q.why = why; return lv; }
+  var watching = false;
+  function watch() { if (watching) return; watching = true; var moved = 0, t0 = performance.now(), frames = [], fine = 0;
+    var onMove = function () { if (!moved) moved = performance.now(); }; window.addEventListener('pointermove', onMove, { passive: true }); window.addEventListener('touchstart', onMove, { passive: true });
+    var stop = function () { watching = false; window.removeEventListener('pointermove', onMove); window.removeEventListener('touchstart', onMove); try { sessionStorage.setItem('jjQDone', '1'); } catch (e) {} };
+    (function raf(t) { if (!watching) return; if (Q.user || Q.forced) { stop(); return; } requestAnimationFrame(raf); if (document.hidden || document.getElementById('jjld')) { frames = []; moved = 0; t0 = performance.now(); return; }   /* never while a loader is up or the tab is away */
+      frames.push(t); var now = performance.now(), from = moved ? moved : t0, need = moved ? 3000 : 10000; if (now - from < need) return;
+      var n = 0; for (var i = frames.length - 1; i >= 0 && frames[i] >= now - 3000; i--) n++; var fps = n / 3; Q.fps = window.jjLite.fps = Math.round(fps);
+      if (fps < (moved ? 38 : 24) && Q.level > 0) { Q.down('measured ' + fps.toFixed(0) + ' frames a second', fps < 24 && moved ? 2 : 1); fine = 0; frames = []; t0 = performance.now(); moved = moved ? t0 : 0; if (Q.level === 0) stop(); return; }   /* a step down, then a fresh look once it has settled */
+      if (moved) { fine++; frames = []; moved = performance.now(); if (fine >= 2 || Q.level === 0) stop(); return; }   /* two looks with the pointer moving, both fine: this level stays */
+      if (frames.length > 2000) frames.splice(0, 1000); })(performance.now()); }
+  var fm = /[?&]jjq=(\d|ultra|lite|medium|full)\b/.exec(q), fl = /[?&]jjlite=([01])\b/.exec(q), mine = null, auto = null, done = null;
+  try { mine = localStorage.getItem('jjQuality'); auto = sessionStorage.getItem('jjQAuto'); done = sessionStorage.getItem('jjQDone'); if (auto == null && sessionStorage.getItem('jjLite') === '1') auto = '1'; } catch (e) {}
+  if (fm || fl) { Q.forced = true; apply(fm ? (/\d/.test(fm[1]) ? +fm[1] : KEYS.indexOf(fm[1])) : (fl[1] === '1' ? 1 : 3), 'the address'); return; }
+  if (mine != null && /^[0-3]$/.test(mine)) { apply(+mine, 'your choice', true); return; }
+  if (auto != null && /^[0-3]$/.test(auto)) { apply(+auto, 'picked for this device'); if (done !== '1') watch(); return; }
+  apply(preset(), 'picked for this device'); watch();
 })();
 
 /* ---- f-1010a · THE PERFORMANCE PROBE. Only with ?jjperf=1 on the address; without it nothing here runs.
